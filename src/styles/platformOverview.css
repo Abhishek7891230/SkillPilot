@@ -1,0 +1,260 @@
+.platform-overview {
+  padding: 8rem 5% 6rem;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9ff 50%, #ffffff 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.overview-header {
+  margin-bottom: 6rem;
+  position: relative;
+  z-index: 2;
+}
+
+.section-title {
+  text-align: left;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.steps-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.step-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  margin-bottom: 8rem;
+  position: relative;
+  z-index: 1;
+}
+
+.step-row.reverse {
+  direction: rtl;
+}
+
+.step-row.reverse > * {
+  direction: ltr;
+}
+
+.step-row:last-child {
+  margin-bottom: 0;
+}
+
+.step-content,
+.step-visual {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.step-row.visible .step-content {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.2s;
+}
+
+.step-row.visible .step-visual {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.4s;
+}
+
+.step-content {
+  padding: 2rem;
+  position: relative;
+}
+
+.step-number {
+  font-size: 5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  opacity: 0.15;
+  position: absolute;
+  top: -20px;
+  left: 0;
+  z-index: 0;
+  line-height: 1;
+}
+
+.step-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.5px;
+}
+
+.step-description {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #6a6a6a;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 1.5rem;
+}
+
+.step-decoration {
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+.step-visual {
+  position: relative;
+}
+
+.video-container {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9ff 50%, #ffffff 100%);
+  border: 10px solid #e5e7eb;
+  aspect-ratio: 16/10;
+}
+
+.step-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.video-glow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  opacity: 0;
+  filter: blur(60px);
+  z-index: -1;
+  transition: opacity 0.6s ease;
+}
+
+.step-row.visible .video-glow {
+  opacity: 0.2;
+}
+
+@media (max-width: 1024px) {
+  .step-row {
+    gap: 3rem;
+    margin-bottom: 6rem;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+  }
+
+  .step-title {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .platform-overview {
+    padding: 5rem 5% 4rem;
+  }
+
+  .overview-header {
+    margin-bottom: 4rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+  }
+
+  .step-row,
+  .step-row.reverse {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 4rem;
+    direction: ltr;
+  }
+
+  .connection-line {
+    display: none;
+  }
+
+  .step-number {
+    font-size: 3.5rem;
+  }
+
+  .step-title {
+    font-size: 1.5rem;
+  }
+
+  .step-description {
+    font-size: 1rem;
+  }
+
+  .step-content {
+    padding: 1rem;
+  }
+}
+
+.cta-section {
+  margin: 3rem auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.cta-inner {
+  width: 90%;
+  max-width: 1200px;
+  padding: 3rem 4rem;
+  border-radius: 20px;
+
+  background: linear-gradient(135deg, #eef0ff 0%, #ffffff 100%);
+  border: 1px solid #e2e4ef;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.cta-inner h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.cta-btn {
+  padding: 0.9rem 2rem;
+  border-radius: 25px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(102, 126, 234, 0.3);
+}
