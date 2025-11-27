@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "../styles/navbar.css";
+import { Link } from "react-router-dom";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -14,10 +15,10 @@ export function Navbar() {
 
       <div className="right-section">
         <div className="nav-links">
-          <a href="#">Notes</a>
-          <a href="#">Mock Test</a>
-          <a href="#">Practice</a>
-          <a href="#">Dashboard</a>
+          <Link to="/notes">Notes</Link>
+          <Link to="/mocktest">Mock Test</Link>
+          <Link to="/practice">Practice</Link>
+          <Link to="/dashboard">Dashboard</Link>
 
           <div className="dropdown" onClick={() => setOpen(!open)}>
             <span className="dropdown-trigger">Contact ▾</span>
