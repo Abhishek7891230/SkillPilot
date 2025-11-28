@@ -1,9 +1,13 @@
 import { useState } from "react";
 import "../styles/navbar.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/authContext";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const { user, logout } = useAuth();
+
+  const navigate = useNavigate();
 
   return (
     <div className="navbar">
@@ -43,7 +47,18 @@ export function Navbar() {
           </div>
         </div>
 
-        <button className="login-btn">Login/Sign up</button>
+        <button
+          className="login-btn"
+          onClick={() => {
+            if (user) {
+              logout();
+            } else {
+              navigate("/auth");
+            }
+          }}
+        >
+          {user ? "Logout" : "Login / Sign up"}
+        </button>
       </div>
     </div>
   );
