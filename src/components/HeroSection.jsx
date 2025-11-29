@@ -1,6 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import "../styles/heroSection.css";
 
 export function HeroSection() {
+  const navigate = useNavigate();
+
   return (
     <section className="hero" id="home">
       <div className="hero-content">
@@ -14,7 +17,9 @@ export function HeroSection() {
           ace your skills.
         </p>
         <div className="hero-buttons">
-          <button className="primary-btn">Start Practicing →</button>
+          <button className="primary-btn" onClick={() => navigate("/practice")}>
+            Start Practicing →
+          </button>
         </div>
       </div>
 

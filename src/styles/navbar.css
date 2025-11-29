@@ -34,6 +34,8 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  text-decoration: none;
+  flex-shrink: 0;
 }
 
 .nav-links {
@@ -49,6 +51,7 @@ body {
   font-weight: 500;
   transition: all 0.3s ease;
   position: relative;
+  white-space: nowrap;
 }
 
 .nav-links a::after {
@@ -74,6 +77,7 @@ body {
   display: flex;
   align-items: center;
   gap: 2rem;
+  flex-shrink: 0;
 }
 
 .login-btn {
@@ -86,10 +90,12 @@ body {
   font-weight: 600;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  white-space: nowrap;
 }
 
 .login-btn:hover {
   box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  transform: translateY(-2px);
 }
 
 .login-btn::after {
@@ -109,6 +115,7 @@ body {
   align-items: center;
   gap: 0.3rem;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .dropdown-trigger:hover {
@@ -117,7 +124,7 @@ body {
 
 .dropdown-menu {
   position: absolute;
-  top: calc(100% + 0.5rem); /* no gap issues */
+  top: calc(100% + 0.5rem);
   right: 0;
 
   display: flex;
@@ -158,4 +165,159 @@ body {
 .dropdown-menu a:hover {
   color: #667eea;
   background: #f8f9ff;
+}
+
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 1rem 3%;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+
+  .nav-links {
+    gap: 1.8rem;
+  }
+
+  .nav-links a {
+    font-size: 0.95rem;
+  }
+
+  .right-section {
+    gap: 1.5rem;
+  }
+
+  .login-btn {
+    padding: 0.65rem 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .dropdown-trigger {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .navbar {
+    padding: 0.9rem 2%;
+  }
+
+  .logo {
+    font-size: 1.4rem;
+  }
+
+  .nav-links {
+    gap: 1.3rem;
+  }
+
+  .nav-links a {
+    font-size: 0.9rem;
+  }
+
+  .right-section {
+    gap: 1.2rem;
+  }
+
+  .login-btn {
+    padding: 0.6rem 1.3rem;
+    font-size: 0.9rem;
+  }
+
+  .dropdown-trigger {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0.8rem 2%;
+  }
+
+  .logo {
+    font-size: 1.3rem;
+  }
+
+  .nav-links {
+    gap: 1rem;
+  }
+
+  .nav-links a {
+    font-size: 0.85rem;
+  }
+
+  .right-section {
+    gap: 1rem;
+  }
+
+  .login-btn {
+    padding: 0.55rem 1.2rem;
+    font-size: 0.85rem;
+  }
+
+  .dropdown-trigger {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    padding: 0.7rem 2%;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  .nav-links {
+    gap: 0.8rem;
+  }
+
+  .nav-links a {
+    font-size: 0.8rem;
+  }
+
+  .right-section {
+    gap: 0.8rem;
+  }
+
+  .login-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  .dropdown-trigger {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.6rem 1.5%;
+  }
+
+  .logo {
+    font-size: 1.1rem;
+  }
+
+  .nav-links {
+    gap: 0.6rem;
+  }
+
+  .nav-links a {
+    font-size: 0.75rem;
+  }
+
+  .right-section {
+    gap: 0.6rem;
+  }
+
+  .login-btn {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .dropdown-trigger {
+    font-size: 0.75rem;
+  }
 }
