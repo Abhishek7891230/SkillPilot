@@ -5,6 +5,7 @@ import { AuthProvider } from "./context/authContext";
 import Auth from "./pages/AuthPage";
 import { PracticePage } from "./pages/Practicepage";
 import { AptitudePracticePage } from "./pages/AptitudePracticePage";
+import { Dashboard } from "./pages/Dashboard";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/notes" element={<NotesPage />} />
           <Route path="/practice" element={<PracticePage />} />
           <Route path="/aptitude" element={<AptitudePracticePage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>
     </AuthProvider>

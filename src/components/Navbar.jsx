@@ -52,12 +52,20 @@ export function Navbar() {
           onClick={() => {
             if (user) {
               logout();
+              navigate("/");
             } else {
               navigate("/auth");
             }
           }}
         >
-          {user ? "Logout" : "Login / Sign up"}
+          {user ? (
+            <>
+              <i className="fas fa-sign-out-alt"></i>
+              <span className="logout-text">Logout</span>
+            </>
+          ) : (
+            "Login"
+          )}
         </button>
       </div>
     </div>
