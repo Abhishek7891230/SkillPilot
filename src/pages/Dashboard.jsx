@@ -1,86 +1,194 @@
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { auth } from "../firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import "../styles/dashboard.css";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { aptitudeQuestions } from "../data/aptitudeQuestions";
 
-export function Dashboard() {
-  const streakCells = Array.from({ length: 30 });
-  const user = auth.currentUser;
-
-  const [aptSolvedIds, setAptSolvedIds] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const solvedAptObjects = aptitudeQuestions.filter((q) =>
-    aptSolvedIds.includes(q.id)
-  );
-
-  const totalAptSolved = solvedAptObjects.length;
-
-  const aptitudeEasy = solvedAptObjects.filter(
-    (q) => q.difficulty === "easy"
-  ).length;
-  const aptitudeMed = solvedAptObjects.filter(
-    (q) => q.difficulty === "medium"
-  ).length;
-  const aptitudeHard = solvedAptObjects.filter(
-    (q) => q.difficulty === "hard"
-  ).length;
-
-  const totalAptEasy = aptitudeQuestions.filter(
-    (q) => q.difficulty === "easy"
-  ).length;
-  const totalAptMed = aptitudeQuestions.filter(
-    (q) => q.difficulty === "medium"
-  ).length;
-  const totalAptHard = aptitudeQuestions.filter(
-    (q) => q.difficulty === "hard"
-  ).length;
-
-  const aptProgressPercent =
-    aptitudeQuestions.length === 0
-      ? 0
-      : totalAptSolved / aptitudeQuestions.length;
-
-  const clampedApt = Math.min(Math.max(aptProgressPercent, 0), 1);
+function GaugeChart({ value, total, label, gradientId }) {
+  const progress = total === 0 ? 0 : Math.min(Math.max(value / total, 0), 1);
   const radius = 45;
   const circumference = Math.PI * radius;
-  const aptOffset = circumference * (1 - clampedApt);
+  const offset = circumference * (1 - progress);
+
+  return (
+    <div className="light-gauge">
+      <svg viewBox="0 0 100 50" className="gauge-svg">
+        <defs>
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#667eea" />
+            <stop offset="100%" stopColor="#764ba2" />
+          </linearGradient>
+        </defs>
+        <path className="gauge-bg" d="M 5 50 A 45 45 0 0 1 95 50" />
+        {progress > 0 && (
+          <path
+            className="gauge-fg"
+            d="M 5 50 A 45 45 0 0 1 95 50"
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+            style={{ stroke: `url(#${gradientId})` }}
+          />
+        )}
+      </svg>
+      <div className="light-center">
+        <span className="light-total">{value}</span>
+        {total > 0 && <span className="light-sub">/{total}</span>}
+        <div className="light-label">{label}</div>
+      </div>
+    </div>
+  );
+}
+
+function calculateAptitudeStats(solvedIds) {
+  const solved = aptitudeQuestions.filter((q) => solvedIds.includes(q.id));
+
+  const byDifficulty = {
+    easy: solved.filter((q) => q.difficulty === "easy").length,
+    medium: solved.filter((q) => q.difficulty === "medium").length,
+    hard: solved.filter((q) => q.difficulty === "hard").length,
+  };
+
+  const totalByDifficulty = {
+    easy: aptitudeQuestions.filter((q) => q.difficulty === "easy").length,
+    medium: aptitudeQuestions.filter((q) => q.difficulty === "medium").length,
+    hard: aptitudeQuestions.filter((q) => q.difficulty === "hard").length,
+  };
+
+  return {
+    total: solved.length,
+    totalQuestions: aptitudeQuestions.length,
+    byDifficulty,
+    totalByDifficulty,
+  };
+}
+
+function calculateStreaks(dailyActivity, last30Days) {
+  let currentStreak = 0;
+  let maxStreak = 0;
+  let activeDays = 0;
+
+  for (let i = last30Days.length - 1; i >= 0; i--) {
+    const solved = dailyActivity[last30Days[i]] || 0;
+
+    if (solved > 0) {
+      activeDays++;
+      currentStreak++;
+      maxStreak = Math.max(maxStreak, currentStreak);
+    } else {
+      currentStreak = 0;
+    }
+  }
+
+  return { activeDays, maxStreak };
+}
+
+function getLast30Days() {
+  const days = [];
+  const today = new Date();
+  for (let i = 29; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    days.push(d.toISOString().split("T")[0]);
+  }
+  return days;
+}
+
+export function Dashboard() {
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(true);
+  const [aptSolvedIds, setAptSolvedIds] = useState([]);
+  const [dailyActivity, setDailyActivity] = useState({});
 
   useEffect(() => {
-    async function fetchAptData() {
-      if (!user) {
-        setLoading(false);
-        return;
-      }
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) {
+      setDataLoading(false);
+      return;
+    }
+
+    async function fetchData() {
+      setDataLoading(true);
 
       try {
-        const ref = doc(db, "users", user.uid, "aptitude", "solved");
-        const snap = await getDoc(ref);
+        const solvedRef = doc(db, "users", user.uid, "aptitude", "solved");
+        const solvedSnap = await getDoc(solvedRef);
+        setAptSolvedIds(
+          solvedSnap.exists() ? solvedSnap.data().solvedQuestions || [] : []
+        );
 
-        if (snap.exists()) {
-          setAptSolvedIds(snap.data().solvedQuestions || []);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        const activityRef = collection(db, "users", user.uid, "dailyActivity");
+        const activitySnap = await getDocs(activityRef);
+        const activityMap = {};
+        activitySnap.forEach((d) => {
+          activityMap[d.id] = d.data().solved || 0;
+        });
+        setDailyActivity(activityMap);
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        setAptSolvedIds([]);
+        setDailyActivity({});
       } finally {
-        setLoading(false);
+        setDataLoading(false);
       }
     }
 
-    fetchAptData();
-  }, [user]);
+    fetchData();
+  }, [user, authLoading]);
 
-  if (loading) {
+  const last30Days = useMemo(() => getLast30Days(), []);
+
+  const aptStats = useMemo(
+    () => calculateAptitudeStats(aptSolvedIds),
+    [aptSolvedIds]
+  );
+
+  const streakData = useMemo(
+    () => calculateStreaks(dailyActivity, last30Days),
+    [dailyActivity, last30Days]
+  );
+
+  const getStreakClass = (count) => {
+    if (count <= 0) return "";
+    if (count < 5) return "streak-low";
+    if (count < 10) return "streak-mid";
+    return "streak-high";
+  };
+
+  if (authLoading || dataLoading) {
     return (
       <>
         <Navbar />
         <div className="loading-container">
-          <div className="loader"></div>
+          <div className="loader" />
           <div className="loading-text">Loading Dashboard...</div>
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  if (!user) {
+    return (
+      <>
+        <Navbar />
+        <div className="loading-container">
+          <div className="loading-text">
+            Please log in to view your dashboard
+          </div>
         </div>
         <Footer />
       </>
@@ -96,23 +204,26 @@ export function Dashboard() {
             <div className="profile-pic">
               <img
                 className="profile-picture"
-                src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                src={
+                  user.photoURL ||
+                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                }
                 alt="profile"
               />
             </div>
-            <h3 className="profile-name">Your Name</h3>
-            <p className="profile-email">user@example.com</p>
+            <h3 className="profile-name">{user.displayName || "User"}</h3>
+            <p className="profile-email">{user.email || "No email"}</p>
 
             <button className="edit-profile-btn">Edit Profile</button>
 
             <div className="profile-stats">
               <div>
                 <span className="stat-label">Total Solved</span>
-                <span className="stat-value">{totalAptSolved}</span>
+                <span className="stat-value">{aptStats.total}</span>
               </div>
               <div>
                 <span className="stat-label">Active Days</span>
-                <span className="stat-value">0</span>
+                <span className="stat-value">{streakData.activeDays}</span>
               </div>
             </div>
           </div>
@@ -122,36 +233,15 @@ export function Dashboard() {
           <div className="progress-grid">
             <div className="progress-card">
               <h3 className="card-title">Coding</h3>
-
               <div className="card-body">
                 <div className="card-left">
-                  <div className="light-gauge">
-                    <svg viewBox="0 0 100 50" className="gauge-svg">
-                      <defs>
-                        <linearGradient
-                          id="gaugeGradient"
-                          x1="0%"
-                          y1="0%"
-                          x2="100%"
-                          y2="0%"
-                        >
-                          <stop offset="0%" stopColor="#667eea" />
-                          <stop offset="100%" stopColor="#764ba2" />
-                        </linearGradient>
-                      </defs>
-                      <path
-                        className="gauge-bg"
-                        d="M 5 50 A 45 45 0 0 1 95 50"
-                      />
-                    </svg>
-                    <div className="light-center">
-                      <span className="light-total">0</span>
-                      <span className="light-sub">/3762</span>
-                      <div className="light-label">Total Solved</div>
-                    </div>
-                  </div>
+                  <GaugeChart
+                    value={0}
+                    total={3762}
+                    label="Total Solved"
+                    gradientId="codingGradient"
+                  />
                 </div>
-
                 <div className="card-right">
                   <div className="difficulty-column">
                     <div className="difficulty-box easy">
@@ -159,7 +249,7 @@ export function Dashboard() {
                       <strong>0/915</strong>
                     </div>
                     <div className="difficulty-box medium">
-                      <span>Med </span>
+                      <span>Med</span>
                       <strong>0/959</strong>
                     </div>
                     <div className="difficulty-box hard">
@@ -173,51 +263,36 @@ export function Dashboard() {
 
             <div className="progress-card">
               <h3 className="card-title">Aptitude</h3>
-
               <div className="card-body">
                 <div className="card-left">
-                  <div className="light-gauge">
-                    <svg viewBox="0 0 100 50" className="gauge-svg">
-                      <path
-                        className="gauge-bg"
-                        d="M 5 50 A 45 45 0 0 1 95 50"
-                      />
-                      <path
-                        className="gauge-fg"
-                        d="M 5 50 A 45 45 0 0 1 95 50"
-                        strokeDasharray={circumference}
-                        strokeDashoffset={aptOffset}
-                      />
-                    </svg>
-
-                    <div className="light-center">
-                      <span className="light-total">{totalAptSolved}</span>
-                      <span className="light-sub">
-                        /{aptitudeQuestions.length}
-                      </span>
-                      <div className="light-label">Total Solved</div>
-                    </div>
-                  </div>
+                  <GaugeChart
+                    value={aptStats.total}
+                    total={aptStats.totalQuestions}
+                    label="Total Solved"
+                    gradientId="aptitudeGradient"
+                  />
                 </div>
-
                 <div className="card-right">
                   <div className="difficulty-column">
                     <div className="difficulty-box easy">
                       <span>Easy</span>
                       <strong>
-                        {aptitudeEasy}/{totalAptEasy}
+                        {aptStats.byDifficulty.easy}/
+                        {aptStats.totalByDifficulty.easy}
                       </strong>
                     </div>
                     <div className="difficulty-box medium">
-                      <span>Med </span>
+                      <span>Med</span>
                       <strong>
-                        {aptitudeMed}/{totalAptMed}
+                        {aptStats.byDifficulty.medium}/
+                        {aptStats.totalByDifficulty.medium}
                       </strong>
                     </div>
                     <div className="difficulty-box hard">
                       <span>Hard</span>
                       <strong>
-                        {aptitudeHard}/{totalAptHard}
+                        {aptStats.byDifficulty.hard}/
+                        {aptStats.totalByDifficulty.hard}
                       </strong>
                     </div>
                   </div>
@@ -227,35 +302,15 @@ export function Dashboard() {
 
             <div className="progress-card">
               <h3 className="card-title">Coding Mock Test</h3>
-
               <div className="card-body">
                 <div className="card-left">
-                  <div className="light-gauge">
-                    <svg viewBox="0 0 100 50" className="gauge-svg">
-                      <defs>
-                        <linearGradient
-                          id="gaugeGradient"
-                          x1="0%"
-                          y1="0%"
-                          x2="100%"
-                          y2="0%"
-                        >
-                          <stop offset="0%" stopColor="#667eea" />
-                          <stop offset="100%" stopColor="#764ba2" />
-                        </linearGradient>
-                      </defs>
-                      <path
-                        className="gauge-bg"
-                        d="M 5 50 A 45 45 0 0 1 95 50"
-                      />
-                    </svg>
-                    <div className="light-center">
-                      <span className="light-total">0</span>
-                      <div className="light-label">Success rate</div>
-                    </div>
-                  </div>
+                  <GaugeChart
+                    value={0}
+                    total={0}
+                    label="Success rate"
+                    gradientId="codingMockGradient"
+                  />
                 </div>
-
                 <div className="card-right">
                   <div className="difficulty-column">
                     <div className="difficulty-box summary">
@@ -264,7 +319,7 @@ export function Dashboard() {
                     </div>
                     <div className="difficulty-box summary">
                       <span>Best score</span>
-                      <strong> 0%</strong>
+                      <strong>0%</strong>
                     </div>
                     <div className="difficulty-box summary">
                       <span>Average</span>
@@ -277,35 +332,15 @@ export function Dashboard() {
 
             <div className="progress-card">
               <h3 className="card-title">Aptitude Mock Test</h3>
-
               <div className="card-body">
                 <div className="card-left">
-                  <div className="light-gauge">
-                    <svg viewBox="0 0 100 50" className="gauge-svg">
-                      <defs>
-                        <linearGradient
-                          id="gaugeGradient"
-                          x1="0%"
-                          y1="0%"
-                          x2="100%"
-                          y2="0%"
-                        >
-                          <stop offset="0%" stopColor="#667eea" />
-                          <stop offset="100%" stopColor="#764ba2" />
-                        </linearGradient>
-                      </defs>
-                      <path
-                        className="gauge-bg"
-                        d="M 5 50 A 45 45 0 0 1 95 50"
-                      />
-                    </svg>
-                    <div className="light-center">
-                      <span className="light-total">0</span>
-                      <div className="light-label">Success rate</div>
-                    </div>
-                  </div>
+                  <GaugeChart
+                    value={0}
+                    total={0}
+                    label="Success rate"
+                    gradientId="aptitudeMockGradient"
+                  />
                 </div>
-
                 <div className="card-right">
                   <div className="difficulty-column">
                     <div className="difficulty-box summary">
@@ -330,15 +365,17 @@ export function Dashboard() {
             <div className="streak-header">
               <h3>Practice streak (last 30 days)</h3>
               <div className="streak-meta">
-                <span>Active days: 0</span>
-                <span>Max streak: 0</span>
+                <span>Active days: {streakData.activeDays}</span>
+                <span>Max streak: {streakData.maxStreak}</span>
               </div>
             </div>
 
             <div className="streak-grid">
-              {streakCells.map((_, idx) => (
-                <div key={idx} className="streak-cell" />
-              ))}
+              {last30Days.map((date) => {
+                const solved = dailyActivity[date] || 0;
+                const cls = getStreakClass(solved);
+                return <div key={date} className={`streak-cell ${cls}`} />;
+              })}
             </div>
           </section>
         </section>

@@ -164,11 +164,9 @@
 
 .gauge-fg {
   fill: none;
-  stroke: url(#gaugeGradient);
   stroke-width: 5;
   stroke-linecap: round;
   transform-origin: 50% 50%;
-  stroke-dasharray: 141.3;
   transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -323,6 +321,21 @@
   border: 1px solid #f0f0f0;
 }
 
+.streak-cell.streak-low {
+  background: #bbf7d0;
+  border-color: #bbf7d0;
+}
+
+.streak-cell.streak-mid {
+  background: #4ade80;
+  border-color: #22c55e;
+}
+
+.streak-cell.streak-high {
+  background: #16a34a;
+  border-color: #15803d;
+}
+
 .loading-container {
   position: fixed;
   top: 0;
@@ -363,7 +376,7 @@
   .progress-grid {
     gap: 20px;
   }
-  
+
   .dashboard-main {
     padding: 32px;
   }
@@ -378,7 +391,7 @@
     justify-content: flex-start;
     gap: 40px;
   }
-  
+
   .light-gauge {
     width: 180px;
     height: 90px;
@@ -402,7 +415,7 @@
   .dashboard-main {
     padding: 24px;
   }
-  
+
   .progress-grid {
     gap: 20px;
   }
@@ -418,22 +431,22 @@
     gap: 6px;
     padding: 16px;
   }
-  
+
   .streak-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
   }
-  
+
   .streak-meta {
     width: 100%;
     justify-content: space-between;
   }
-  
+
   .progress-card {
     padding: 24px;
   }
-  
+
   .card-title {
     font-size: 1rem;
   }
@@ -444,11 +457,11 @@
     width: 160px;
     height: 80px;
   }
-  
+
   .light-total {
     font-size: 1.75rem;
   }
-  
+
   .light-sub {
     font-size: 0.75rem;
   }
@@ -456,7 +469,7 @@
   .difficulty-box {
     padding: 10px 14px;
   }
-  
+
   .difficulty-box strong {
     font-size: 0.875rem;
   }
@@ -466,20 +479,20 @@
     gap: 28px;
     align-items: center;
   }
-  
+
   .profile-card {
     padding: 24px 20px;
   }
-  
+
   .profile-pic {
     width: 72px;
     height: 72px;
   }
-  
+
   .profile-name {
     font-size: 1.125rem;
   }
-  
+
   .dashboard-sidebar {
     padding: 20px;
   }

@@ -3,7 +3,7 @@ import { Navbar } from "../components/Navbar";
 import { Footer } from "../components/Footer";
 import { aptitudeQuestions } from "../data/aptitudeQuestions";
 import "../styles/aptitude.css";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, increment } from "firebase/firestore";
 import { db } from "../firebase/firestore";
 import { auth } from "../firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
@@ -74,6 +74,25 @@ export function AptitudePracticePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentQuestion.id]);
 
+  const logDailyActivity = async () => {
+    if (!authUser) {
+      console.log("No auth user found");
+      return;
+    }
+
+    const today = new Date();
+    const dateString = today.toISOString().split("T")[0];
+
+    const ref = doc(db, "users", authUser.uid, "dailyActivity", dateString);
+
+    try {
+      await setDoc(ref, { solved: increment(1) }, { merge: true });
+      console.log("Daily activity logged!");
+    } catch (err) {
+      console.error("FAILED to write daily activity:", err);
+    }
+  };
+
   const handleSelectOption = (index) => {
     if (solvedQuestions.includes(currentQuestion.id)) {
       return;
@@ -99,6 +118,7 @@ export function AptitudePracticePage() {
       const newList = [...solvedQuestions, currentQuestion.id];
       setSolvedQuestions(newList);
       saveSolvedToFirestore(newList);
+      logDailyActivity();
     }
 
     if (!isCorrect) {
