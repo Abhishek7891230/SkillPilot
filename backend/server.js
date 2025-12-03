@@ -47,9 +47,17 @@ app.post("/judge", async (req, res) => {
         }
       );
 
-      const actual = (response.data.run.stdout || "").trim();
-      const expected = t.expected.trim();
-      const passed = actual === expected;
+      function normalize(str) {
+        return str.replace(/\s+/g, "").toLowerCase();
+      }
+
+      const rawActual = (response.data.run.stdout || "").trim();
+      const rawExpected = t.expected.trim();
+
+      const actual = rawActual;
+      const expected = rawExpected;
+
+      const passed = normalize(rawActual) === normalize(rawExpected);
 
       results.push({
         input: t.input,
