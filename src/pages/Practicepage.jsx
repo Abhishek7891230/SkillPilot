@@ -14,7 +14,7 @@ export function PracticePage() {
             <h2>Practice Coding</h2>
           </div>
           <div className="sub-options">
-            <a href="#" className="option-card">
+            <a href="/coding" className="option-card">
               <i className="fas fa-terminal"></i>
               <div className="option-text">
                 <h3>Solve Problems →</h3>
