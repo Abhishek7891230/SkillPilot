@@ -9,22 +9,13 @@ app.use(
     origin: "*",
     methods: ["GET", "POST", "OPTIONS"],
     allowedHeaders: ["Content-Type"],
+    credentials: false,
   })
 );
 
 app.use(express.json());
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
+app.options("*", cors());
 
 app.post("/run", async (req, res) => {
   const { language, code, input } = req.body;
@@ -56,7 +47,11 @@ app.post("/run", async (req, res) => {
   }
 });
 
+app.get("/", (req, res) => {
+  res.json({ status: "Backend is running!" });
+});
+
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Backend running on port ${PORT}`);
 });

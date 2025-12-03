@@ -39,18 +39,15 @@ export function CodingPracticePage() {
     const sampleInput = currentQuestion.samples?.[0]?.input || "";
 
     try {
-      const res = await fetch(
-        "https://skillpilot-production.up.railway.app/run",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            language,
-            code,
-            input: sampleInput,
-          }),
-        }
-      );
+      const res = await fetch("skillpilot-production-8c12.up.railway.app", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          language,
+          code,
+          input: sampleInput,
+        }),
+      });
 
       const data = await res.json();
 
