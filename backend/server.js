@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import axios from "axios";
+import { loadProblem } from "./controller/loadProblem.js";
+import { pythonWrapper } from "./wrappers/pythonWrapper.js";
 
 const app = express();
 
@@ -17,32 +19,51 @@ app.use(express.json());
 
 app.options("*", cors());
 
-app.post("/run", async (req, res) => {
-  const { language, code, input } = req.body;
+app.post("/judge", async (req, res) => {
+  const { language, code, questionId } = req.body;
 
   try {
-    const response = await axios.post(
-      "https://emkc.org/api/v2/piston/execute",
-      {
-        language,
-        version: "*",
-        files: [{ content: code }],
-        stdin: input,
-      }
-    );
+    const problem = loadProblem(questionId);
 
-    const run = response.data.run;
+    let wrapper;
+    if (language === "python") {
+      wrapper = pythonWrapper;
+    } else {
+      return res.json({ error: "Language wrapper not implemented yet" });
+    }
 
-    res.json({
-      stdout: run.stdout,
-      stderr: run.stderr,
-      output: run.output,
-    });
+    const results = [];
+
+    for (const t of problem.testCases) {
+      const wrapped = wrapper(code, problem.functionName);
+
+      const response = await axios.post(
+        "https://emkc.org/api/v2/piston/execute",
+        {
+          language,
+          version: "*",
+          files: [{ content: wrapped }],
+          stdin: t.input,
+        }
+      );
+
+      const actual = (response.data.run.stdout || "").trim();
+      const expected = t.expected.trim();
+      const passed = actual === expected;
+
+      results.push({
+        input: t.input,
+        expected,
+        actual,
+        passed,
+      });
+    }
+
+    res.json({ results });
   } catch (err) {
-    console.error("Execution error:", err.message);
-    res.status(500).json({
-      error: "Execution failed",
-      details: err.message,
+    res.json({
+      error: "Judge error",
+      message: err.message,
     });
   }
 });

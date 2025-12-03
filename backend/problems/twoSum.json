@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "title": "Two Sum",
+  "functionName": "solve",
+  "parameters": ["nums", "target"],
+  "parameterTypes": ["int[]", "int"],
+  "returnType": "int[]",
+  "testCases": [
+    {
+      "input": "[2,7,11,15] 9",
+      "expected": "[0,1]"
+    }
+  ]
+}
