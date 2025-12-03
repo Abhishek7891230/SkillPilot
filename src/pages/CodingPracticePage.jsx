@@ -33,6 +33,38 @@ export function CodingPracticePage() {
     setCurrentIndex((i) => (i + 1 < filteredQuestions.length ? i + 1 : 0));
   };
 
+  const runCode = async () => {
+    setOutput("Running...");
+
+    const sampleInput = currentQuestion.samples?.[0]?.input || "";
+
+    try {
+      const res = await fetch(
+        "https://skillpilot-production.up.railway.app/run",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            language,
+            code,
+            input: sampleInput,
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.stderr) {
+        setOutput(data.stderr);
+      } else {
+        setOutput(data.stdout || "No output");
+      }
+    } catch (err) {
+      setOutput("Backend error. Check console.");
+      console.error(err);
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -120,7 +152,9 @@ export function CodingPracticePage() {
               <option value="cpp">C++</option>
             </select>
 
-            <button className="run-btn">▶</button>
+            <button className="run-btn" onClick={runCode}>
+              ▶
+            </button>
             <button className="submit-btn">Submit</button>
           </div>
 
