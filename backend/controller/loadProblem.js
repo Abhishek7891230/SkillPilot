@@ -2,12 +2,10 @@ import fs from "fs";
 import path from "path";
 
 export function loadProblem(problemId) {
-  const filePath = path.join(
-    process.cwd(),
-    "backend",
-    "problems",
-    `${problemId}.json`
-  );
+  const filePath = path.join(process.cwd(), "problems", `${problemId}.json`);
+
+  console.log("Loading:", filePath);
+
   const data = fs.readFileSync(filePath, "utf8");
   return JSON.parse(data);
 }
