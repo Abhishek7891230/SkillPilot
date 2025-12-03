@@ -1,14 +1,19 @@
 {
   "id": 1,
-  "title": "Two Sum",
-  "functionName": "solve",
-  "parameters": ["nums", "target"],
-  "parameterTypes": ["int[]", "int"],
-  "returnType": "int[]",
+  "slug": "sum-of-two-numbers",
+  "title": "Sum of Two Numbers",
   "testCases": [
     {
-      "input": "[2,7,11,15] 9",
-      "expected": "[0,1]"
+      "input": "0\n0\n",
+      "expected": "0"
+    },
+    {
+      "input": "100\n200\n",
+      "expected": "300"
+    },
+    {
+      "input": "-10\n-20\n",
+      "expected": "-30"
     }
   ]
 }

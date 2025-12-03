@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import axios from "axios";
 import { loadProblem } from "./controller/loadProblem.js";
-import { pythonWrapper } from "./wrappers/pythonWrapper.js";
 
 const app = express();
 
@@ -16,61 +15,64 @@ app.use(
 );
 
 app.use(express.json());
-
 app.options("*", cors());
+
+function normalize(str) {
+  return (str || "").trim().replace(/\s+/g, " ").toLowerCase();
+}
 
 app.post("/judge", async (req, res) => {
   const { language, code, questionId } = req.body;
 
+  if (!language || !code || !questionId) {
+    return res.status(400).json({
+      error: "BadRequest",
+      message: "language, code and questionId are required",
+    });
+  }
+
   try {
     const problem = loadProblem(questionId);
 
-    let wrapper;
-    if (language === "python") {
-      wrapper = pythonWrapper;
-    } else {
-      return res.json({ error: "Language wrapper not implemented yet" });
+    if (!problem || !problem.testCases) {
+      return res.status(400).json({
+        error: "ProblemError",
+        message: `No testCases found for questionId=${questionId}`,
+      });
     }
 
     const results = [];
 
     for (const t of problem.testCases) {
-      const wrapped = wrapper(code, problem.functionName);
-
       const response = await axios.post(
         "https://emkc.org/api/v2/piston/execute",
         {
           language,
           version: "*",
-          files: [{ content: wrapped }],
+          files: [{ content: code }],
           stdin: t.input,
         }
       );
 
-      function normalize(str) {
-        return str.replace(/\s+/g, "").toLowerCase();
-      }
-
-      const rawActual = (response.data.run.stdout || "").trim();
-      const rawExpected = t.expected.trim();
-
-      const actual = rawActual;
-      const expected = rawExpected;
+      const run = response.data.run || {};
+      const rawActual = (run.stdout || "").trim();
+      const rawExpected = (t.expected || "").trim();
 
       const passed = normalize(rawActual) === normalize(rawExpected);
 
       results.push({
         input: t.input,
-        expected,
-        actual,
+        expected: rawExpected,
+        actual: rawActual,
         passed,
       });
     }
 
     res.json({ results });
   } catch (err) {
-    res.json({
-      error: "Judge error",
+    console.error("Judge error:", err.message);
+    res.status(500).json({
+      error: "JudgeError",
       message: err.message,
     });
   }
