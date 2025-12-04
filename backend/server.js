@@ -5,17 +5,8 @@ import { loadProblem } from "./controller/loadProblem.js";
 
 const app = express();
 
-app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "OPTIONS"],
-    allowedHeaders: ["Content-Type"],
-    credentials: false,
-  })
-);
-
+app.use(cors({ origin: "*", methods: ["GET", "POST"] }));
 app.use(express.json());
-app.options("*", cors());
 
 async function runWithRetry(payload, retries = 3, delay = 300) {
   for (let i = 0; i < retries; i++) {
@@ -41,48 +32,30 @@ function buildCppHarness(code, args) {
 
   args.forEach((arg, index) => {
     const name = `arg${index}`;
-
     if (Array.isArray(arg)) {
-      const values = arg.join(", ");
-      decls.push(`vector<long long> ${name} = {${values}};`);
+      decls.push(`vector<long long> ${name} = {${arg.join(",")}};`);
       callArgs.push(name);
     } else if (typeof arg === "number") {
       decls.push(`long long ${name} = ${arg};`);
       callArgs.push(name);
-    } else if (typeof arg === "string") {
-      const escaped = arg
-        .replace(/\\/g, "\\\\")
-        .replace(/"/g, '\\"')
-        .replace(/\n/g, "\\n");
-      decls.push(`string ${name} = "${escaped}";`);
-      callArgs.push(name);
     } else {
-      const escaped = JSON.stringify(arg)
-        .replace(/\\/g, "\\\\")
-        .replace(/"/g, '\\"')
-        .replace(/\n/g, "\\n");
-      decls.push(`string ${name} = "${escaped}";`);
+      decls.push(`string ${name} = "${String(arg).replace(/"/g, '\\"')}";`);
       callArgs.push(name);
     }
   });
 
-  const declBlock = decls.length
-    ? decls.map((l) => "    " + l).join("\n") + "\n"
-    : "";
-
-  const call = callArgs.join(", ");
-
-  return `#include <bits/stdc++.h>
+  return `
+#include <bits/stdc++.h>
 using namespace std;
-
 ${code}
-
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-${declBlock}    auto __result = solve(${call});
-    cout << "__output:" << __result;
-    return 0;
+int main(){
+${decls.map((d) => "    " + d).join("\n")}
+    try {
+        auto res = solve(${callArgs.join(",")});
+        cout << "__output:" << res;
+    } catch (...) {
+        cout << "__output:Error";
+    }
 }
 `;
 }
@@ -91,48 +64,32 @@ function buildJavaHarness(code, args) {
   const decls = [];
   const callArgs = [];
 
-  args.forEach((arg, index) => {
-    const name = `arg${index}`;
-
+  args.forEach((arg, idx) => {
+    const name = `arg${idx}`;
     if (Array.isArray(arg)) {
-      const values = arg.join(", ");
-      decls.push(`int[] ${name} = new int[]{${values}};`);
+      decls.push(`int[] ${name} = new int[]{${arg.join(",")}};`);
       callArgs.push(name);
     } else if (typeof arg === "number") {
       decls.push(`int ${name} = ${arg};`);
       callArgs.push(name);
-    } else if (typeof arg === "string") {
-      const escaped = arg
-        .replace(/\\/g, "\\\\")
-        .replace(/"/g, '\\"')
-        .replace(/\n/g, "\\n");
-      decls.push(`String ${name} = "${escaped}";`);
-      callArgs.push(name);
     } else {
-      const escaped = JSON.stringify(arg)
-        .replace(/\\/g, "\\\\")
-        .replace(/"/g, '\\"')
-        .replace(/\n/g, "\\n");
-      decls.push(`String ${name} = "${escaped}";`);
+      decls.push(`String ${name} = "${String(arg).replace(/"/g, '\\"')}";`);
       callArgs.push(name);
     }
   });
 
-  const declBlock =
-    decls.length > 0 ? decls.map((l) => "        " + l).join("\n") + "\n" : "";
-
-  const call = callArgs.join(", ");
-
   return `
-import java.util.*;
-import java.io.*;
-
 ${code}
 
 public class Main {
     public static void main(String[] args) {
-${declBlock}        Object result = Solution.solve(${call});
-        System.out.println("__output:" + String.valueOf(result));
+        try {
+${decls.map((d) => "            " + d).join("\n")}
+            Object result = Solution.solve(${callArgs.join(",")});
+            System.out.println("__output:" + String.valueOf(result));
+        } catch (Exception e) {
+            System.out.println("__output:Error");
+        }
     }
 }
 `;
@@ -145,9 +102,12 @@ app.post("/judge", async (req, res) => {
     const problem = loadProblem(questionId);
     const results = [];
 
-    if (language === "javascript") {
-      for (const t of problem.testCases) {
-        const harness = `
+    for (const t of problem.testCases) {
+      let harness;
+      let pistonLang = language;
+
+      if (language === "javascript") {
+        harness = `
 const realLog = console.log;
 console.log = (msg) => {
   if (String(msg).startsWith("__output:")) realLog(msg);
@@ -155,37 +115,17 @@ console.log = (msg) => {
 
 ${code}
 
-let __result;
 try {
-  __result = solve(...${JSON.stringify(t.args)});
+  const r = solve(...${JSON.stringify(t.args)});
+  console.log("__output:" + JSON.stringify(r));
 } catch (err) {
   console.log("__output:Error");
-  process.exit(0);
 }
-
-console.log("__output:" + JSON.stringify(__result));
 `;
-
-        const response = await runWithRetry({
-          language: "javascript",
-          version: "*",
-          files: [{ content: harness }],
-        });
-
-        const stdout = response.data.run.stdout || "";
-        const match = stdout.match(/__output:(.*)/);
-        const actual = match ? match[1].trim() : "";
-        const passed = actual === t.expected;
-
-        results.push({ args: t.args, expected: t.expected, actual, passed });
       }
 
-      return res.json({ results });
-    }
-
-    if (language === "python") {
-      for (const t of problem.testCases) {
-        const harness = `
+      if (language === "python") {
+        harness = `
 import builtins
 _real_print = print
 def print(*args, **kwargs): pass
@@ -198,87 +138,39 @@ try:
 except:
     _real_print("__output:Error")
 `;
-
-        const response = await runWithRetry({
-          language: "python",
-          version: "*",
-          files: [{ content: harness }],
-        });
-
-        const stdout = response.data.run.stdout || "";
-        const match = stdout.match(/__output:(.*)/);
-        const actual = match ? match[1].trim() : "";
-        const passed = actual === t.expected;
-
-        results.push({ args: t.args, expected: t.expected, actual, passed });
       }
 
-      return res.json({ results });
-    }
-
-    if (language === "cpp") {
-      for (const t of problem.testCases) {
-        const harness = buildCppHarness(code, t.args);
-
-        const response = await runWithRetry({
-          language: "cpp",
-          version: "*",
-          files: [{ content: harness }],
-        });
-
-        const stdout = response.data.run.stdout || "";
-        const match = stdout.match(/__output:(.*)/);
-        const actual = match ? match[1].trim() : "";
-        const passed = actual === t.expected;
-
-        results.push({ args: t.args, expected: t.expected, actual, passed });
+      if (language === "cpp") {
+        harness = buildCppHarness(code, t.args);
       }
 
-      return res.json({ results });
-    }
-
-    if (language === "java") {
-      const sanitized = code
-        .replace(/public\s+class/g, "class")
-        .replace(/public\s+static/g, "static")
-        .replace(/\\/g, "\\\\");
-
-      for (const t of problem.testCases) {
-        const harness = buildJavaHarness(sanitized, t.args);
-
-        const response = await runWithRetry({
-          language: "java",
-          version: "*",
-          files: [
-            {
-              name: "Main.java",
-              content: harness,
-            },
-          ],
-        });
-
-        const stdout = response.data.run.stdout || "";
-        const match = stdout.match(/__output:(.*)/);
-        const actual = match ? match[1].trim() : "";
-        const passed = actual === t.expected;
-
-        results.push({ args: t.args, expected: t.expected, actual, passed });
+      if (language === "java") {
+        harness = buildJavaHarness(code, t.args);
       }
 
-      return res.json({ results });
+      const response = await runWithRetry({
+        language: pistonLang,
+        version: "*",
+        files: [{ content: harness }],
+      });
+
+      const stdout = response.data.run.stdout + response.data.run.stderr;
+
+      const match = stdout.match(/__output:(.*)/);
+      const actual = match ? match[1].trim() : "Error";
+
+      results.push({
+        args: t.args,
+        expected: t.expected,
+        actual,
+        passed: actual === t.expected,
+      });
     }
 
-    return res.status(400).json({ error: "Unsupported language" });
+    return res.json({ results });
   } catch (err) {
-    res.status(500).json({ error: "JudgeError", message: err.message });
+    return res.status(500).json({ error: "JudgeError", message: err.message });
   }
 });
 
-app.get("/", (req, res) => {
-  res.json({ status: "Backend is running!" });
-});
-
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Backend running on port ${PORT}`);
-});
+app.listen(8080, "0.0.0.0", () => console.log("Backend running on 8080"));
