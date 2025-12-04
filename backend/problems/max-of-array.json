@@ -1,0 +1,8 @@
+{
+  "id": "max-of-array",
+  "testCases": [
+    { "input": "1\n42\n", "expected": "42" },
+    { "input": "3\n10 10 10\n", "expected": "10" },
+    { "input": "6\n-1 0 -2 10 3 9\n", "expected": "10" }
+  ]
+}

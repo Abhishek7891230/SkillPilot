@@ -1,0 +1,8 @@
+{
+  "id": "factorial",
+  "testCases": [
+    { "input": "0\n", "expected": "1" },
+    { "input": "3\n", "expected": "6" },
+    { "input": "6\n", "expected": "720" }
+  ]
+}

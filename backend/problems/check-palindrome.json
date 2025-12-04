@@ -1,0 +1,8 @@
+{
+  "id": "check-palindrome",
+  "testCases": [
+    { "input": "abba\n", "expected": "YES" },
+    { "input": "abc\n", "expected": "NO" },
+    { "input": "a\n", "expected": "YES" }
+  ]
+}

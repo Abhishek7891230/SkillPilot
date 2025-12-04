@@ -2,7 +2,6 @@ import express from "express";
 import cors from "cors";
 import axios from "axios";
 import { loadProblem } from "./controller/loadProblem.js";
-import { pythonWrapper } from "./wrappers/pythonWrapper.js";
 
 const app = express();
 
@@ -43,23 +42,13 @@ app.post("/judge", async (req, res) => {
 
   try {
     const problem = loadProblem(questionId);
-
-    let wrapper;
-    if (language === "python") {
-      wrapper = pythonWrapper;
-    } else {
-      return res.json({ error: "Language wrapper not implemented yet" });
-    }
-
     const results = [];
 
     for (const t of problem.testCases) {
-      const wrappedCode = wrapper(code, problem.functionName);
-
       const response = await runWithRetry({
         language,
         version: "*",
-        files: [{ content: wrappedCode }],
+        files: [{ content: code }],
         stdin: t.input,
       });
 

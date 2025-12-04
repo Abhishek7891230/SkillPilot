@@ -1,0 +1,8 @@
+{
+  "id": "second-largest",
+  "testCases": [
+    { "input": "4\n10 20 30 40\n", "expected": "30" },
+    { "input": "3\n5 5 3\n", "expected": "3" },
+    { "input": "5\n9 8 7 6 5\n", "expected": "8" }
+  ]
+}

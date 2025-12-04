@@ -1,0 +1,8 @@
+{
+  "id": "sum-of-two-numbers",
+  "testCases": [
+    { "input": "0\n0\n", "expected": "0" },
+    { "input": "100\n200\n", "expected": "300" },
+    { "input": "-10\n-20\n", "expected": "-30" }
+  ]
+}

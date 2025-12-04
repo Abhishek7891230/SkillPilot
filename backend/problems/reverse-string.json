@@ -1,0 +1,8 @@
+{
+  "id": "reverse-string",
+  "testCases": [
+    { "input": "abc\n", "expected": "cba" },
+    { "input": "racecar\n", "expected": "racecar" },
+    { "input": "SkillPilot\n", "expected": "toliPlikS" }
+  ]
+}
