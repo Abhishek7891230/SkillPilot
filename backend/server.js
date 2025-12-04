@@ -67,10 +67,10 @@ function buildJavaHarness(code, args) {
   args.forEach((arg, idx) => {
     const name = `arg${idx}`;
     if (Array.isArray(arg)) {
-      decls.push(`long[] ${name} = new long[]{${arg.join("L,")}L};`);
+      decls.push(`int[] ${name} = new int[]{${arg.join(", ")}};`);
       callArgs.push(name);
     } else if (typeof arg === "number") {
-      decls.push(`long ${name} = ${arg}L;`);
+      decls.push(`int ${name} = ${arg};`);
       callArgs.push(name);
     } else {
       decls.push(`String ${name} = "${String(arg).replace(/"/g, '\\"')}";`);
@@ -78,8 +78,11 @@ function buildJavaHarness(code, args) {
     }
   });
 
+  let userCode = code.trim();
+  userCode = userCode.replace(/public\s+class\s+Solution/g, "class Solution");
+
   return `
-${code}
+${userCode}
 
 public class Main {
     public static void main(String[] args) {
@@ -89,7 +92,6 @@ ${decls.map((d) => "            " + d).join("\n")}
             System.out.println("__output:" + result);
         } catch (Exception e) {
             System.out.println("__output:Error");
-            e.printStackTrace();
         }
     }
 }
@@ -155,9 +157,11 @@ except:
         files: [{ content: harness }],
       });
 
-      const stdout = response.data.run.stdout + response.data.run.stderr;
+      const stdout = response.data.run.stdout || "";
+      const stderr = response.data.run.stderr || "";
+      const combined = stdout + stderr;
 
-      const match = stdout.match(/__output:(.*)/);
+      const match = combined.match(/__output:(.*)/);
       const actual = match ? match[1].trim() : "Error";
 
       results.push({

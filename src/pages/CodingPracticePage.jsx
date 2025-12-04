@@ -85,7 +85,7 @@ int main(){
     return 0;
 }`,
     java: `class Solution {
-    public static long solve(long a, long b) {
+    public static int solve(int a, int b) {
         return 0;
     }
 }`,
