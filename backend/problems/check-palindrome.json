@@ -1,8 +1,9 @@
 {
   "id": "check-palindrome",
+  "title": "Check Palindrome",
   "testCases": [
-    { "input": "abba\n", "expected": "YES" },
-    { "input": "abc\n", "expected": "NO" },
-    { "input": "a\n", "expected": "YES" }
+    { "args": ["madam"], "expected": "YES" },
+    { "args": ["hello"], "expected": "NO" },
+    { "args": ["racecar"], "expected": "YES" }
   ]
 }

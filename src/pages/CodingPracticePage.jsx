@@ -13,6 +13,7 @@ import Auth from "./AuthPage";
 function CustomDropdown({ value, options, onChange, placeholder }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
+
   useEffect(() => {
     function close(e) {
       if (ref.current && !ref.current.contains(e.target)) setOpen(false);
@@ -20,7 +21,9 @@ function CustomDropdown({ value, options, onChange, placeholder }) {
     document.addEventListener("mousedown", close);
     return () => document.removeEventListener("mousedown", close);
   }, []);
+
   const selected = options.find((o) => o.value === value);
+
   return (
     <div className="custom-dropdown" ref={ref}>
       <button
@@ -72,10 +75,7 @@ export function CodingPracticePage() {
 
   const starter = {
     python: `# write your code here\n`,
-    javascript: `import fs from "fs";
-const input = fs.readFileSync(0, "utf8").trim().split("\\n");
-
-// write your code here`,
+    javascript: `// write your code here\n`,
     cpp: `#include <bits/stdc++.h>
 using namespace std;
 int main(){
@@ -141,16 +141,12 @@ Result: ${r.passed ? "✔ PASS" : "✘ FAIL"}`
       .join("\n\n");
   }
 
-  const resetEditorState = () => {
-    setOutput("");
-    setAllPassed(false);
-    setCode(starter[language]);
-  };
-
   useEffect(() => {
-    setTimeout(() => {
-      resetEditorState(true);
-    }, 0);
+    Promise.resolve().then(() => {
+      setOutput("");
+      setAllPassed(false);
+      setCode(starter[language]);
+    });
   }, [currentIndex, selectedCategory, language]);
 
   const runCode = async () => {

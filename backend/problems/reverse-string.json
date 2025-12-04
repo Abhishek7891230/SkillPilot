@@ -1,8 +1,9 @@
 {
   "id": "reverse-string",
+  "title": "Reverse a String",
   "testCases": [
-    { "input": "abc\n", "expected": "cba" },
-    { "input": "racecar\n", "expected": "racecar" },
-    { "input": "SkillPilot\n", "expected": "toliPllikS" }
+    { "args": ["hello"], "expected": "olleh" },
+    { "args": ["a"], "expected": "a" },
+    { "args": ["racecar"], "expected": "racecar" }
   ]
 }

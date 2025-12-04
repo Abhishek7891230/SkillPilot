@@ -41,31 +41,55 @@ app.post("/judge", async (req, res) => {
   const { language, code, questionId } = req.body;
 
   try {
-    if (!["python", "javascript"].includes(language)) {
-      return res.json({ error: "Unsupported language" });
-    }
-
     const problem = loadProblem(questionId);
     const results = [];
 
+    if (language !== "javascript") {
+      return res
+        .status(400)
+        .json({ error: "Only JavaScript is supported right now" });
+    }
+
     for (const t of problem.testCases) {
+      const harness = `
+        const realLog = console.log;
+        console.log = (msg) => {
+          if (String(msg).startsWith("__output:")) {
+            realLog(msg);
+          }
+        };
+
+        ${code}
+
+        let __result;
+        try {
+          __result = solve(...${JSON.stringify(t.args)});
+        } catch (err) {
+          console.log("__output:Error");
+          process.exit(0);
+        }
+
+        console.log("__output:" + JSON.stringify(__result));
+      `;
+
       const response = await runWithRetry({
-        language,
+        language: "javascript",
         version: "*",
-        files: [{ content: code }],
-        stdin: t.input,
+        files: [{ content: harness }],
       });
 
-      const rawActual = (response.data.run.stdout || "").trim();
-      const rawExpected = t.expected.trim();
+      const stdout = response.data.run.stdout || "";
+      const match = stdout.match(/__output:(.*)/);
 
-      const normalize = (str) => str.replace(/\s+/g, "").toLowerCase();
-      const passed = normalize(rawActual) === normalize(rawExpected);
+      const actual = match ? match[1].trim() : "";
+      const expected = t.expected;
+
+      const passed = actual === expected;
 
       results.push({
-        input: t.input,
-        expected: rawExpected,
-        actual: rawActual,
+        args: t.args,
+        expected,
+        actual,
         passed,
       });
     }

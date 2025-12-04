@@ -1,8 +1,9 @@
 {
   "id": "second-largest",
+  "title": "Second Largest Element",
   "testCases": [
-    { "input": "4\n10 20 30 40\n", "expected": "30" },
-    { "input": "3\n5 5 3\n", "expected": "3" },
-    { "input": "5\n9 8 7 6 5\n", "expected": "8" }
+    { "args": [[1, 2, 3, 4, 5]], "expected": "4" },
+    { "args": [[10, 20, 30, 40]], "expected": "30" },
+    { "args": [[5, 5, 5, 4]], "expected": "4" }
   ]
 }

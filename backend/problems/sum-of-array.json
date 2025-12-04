@@ -1,8 +1,9 @@
 {
   "id": "sum-of-array",
+  "title": "Sum of Array Elements",
   "testCases": [
-    { "input": "3\n10 10 10\n", "expected": "30" },
-    { "input": "5\n-1 -2 -3 -4 -5\n", "expected": "-15" },
-    { "input": "1\n999\n", "expected": "999" }
+    { "args": [[1, 2, 3, 4]], "expected": "10" },
+    { "args": [[10, -5, 2]], "expected": "7" },
+    { "args": [[100]], "expected": "100" }
   ]
 }

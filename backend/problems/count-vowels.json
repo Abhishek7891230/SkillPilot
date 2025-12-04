@@ -1,8 +1,9 @@
 {
   "id": "count-vowels",
+  "title": "Count Vowels",
   "testCases": [
-    { "input": "SkillPilot\n", "expected": "3" },
-    { "input": "bcd\n", "expected": "0" },
-    { "input": "aeiouAEIOU\n", "expected": "10" }
+    { "args": ["hello"], "expected": "2" },
+    { "args": ["aeiou"], "expected": "5" },
+    { "args": ["xyz"], "expected": "0" }
   ]
 }

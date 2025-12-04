@@ -1,8 +1,9 @@
 {
   "id": "max-of-array",
+  "title": "Maximum in an Array",
   "testCases": [
-    { "input": "1\n42\n", "expected": "42" },
-    { "input": "3\n10 10 10\n", "expected": "10" },
-    { "input": "6\n-1 0 -2 10 3 9\n", "expected": "10" }
+    { "args": [[1, 2, 3, 4, 5]], "expected": "5" },
+    { "args": [[-5, -1, -7, -3]], "expected": "-1" },
+    { "args": [[100]], "expected": "100" }
   ]
 }
