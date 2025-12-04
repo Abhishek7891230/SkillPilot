@@ -26,12 +26,10 @@ async function runWithRetry(payload, retries = 3, delay = 300) {
       );
     } catch (err) {
       const status = err.response?.status;
-
       if (status === 429 && i < retries - 1) {
         await new Promise((r) => setTimeout(r, delay));
         continue;
       }
-
       throw err;
     }
   }
@@ -44,57 +42,91 @@ app.post("/judge", async (req, res) => {
     const problem = loadProblem(questionId);
     const results = [];
 
-    if (language !== "javascript") {
-      return res
-        .status(400)
-        .json({ error: "Only JavaScript is supported right now" });
-    }
+    if (language === "javascript") {
+      for (const t of problem.testCases) {
+        const harness = `
+          const realLog = console.log;
+          console.log = (msg) => {
+            if (String(msg).startsWith("__output:")) {
+              realLog(msg);
+            }
+          };
 
-    for (const t of problem.testCases) {
-      const harness = `
-        const realLog = console.log;
-        console.log = (msg) => {
-          if (String(msg).startsWith("__output:")) {
-            realLog(msg);
+          ${code}
+
+          let __result;
+          try {
+            __result = solve(...${JSON.stringify(t.args)});
+          } catch (err) {
+            console.log("__output:Error");
+            process.exit(0);
           }
-        };
 
-        ${code}
+          console.log("__output:" + JSON.stringify(__result));
+        `;
 
-        let __result;
-        try {
-          __result = solve(...${JSON.stringify(t.args)});
-        } catch (err) {
-          console.log("__output:Error");
-          process.exit(0);
-        }
+        const response = await runWithRetry({
+          language: "javascript",
+          version: "*",
+          files: [{ content: harness }],
+        });
 
-        console.log("__output:" + JSON.stringify(__result));
-      `;
+        const stdout = response.data.run.stdout || "";
+        const match = stdout.match(/__output:(.*)/);
+        const actual = match ? match[1].trim() : "";
+        const passed = actual === t.expected;
 
-      const response = await runWithRetry({
-        language: "javascript",
-        version: "*",
-        files: [{ content: harness }],
-      });
+        results.push({
+          args: t.args,
+          expected: t.expected,
+          actual,
+          passed,
+        });
+      }
 
-      const stdout = response.data.run.stdout || "";
-      const match = stdout.match(/__output:(.*)/);
-
-      const actual = match ? match[1].trim() : "";
-      const expected = t.expected;
-
-      const passed = actual === expected;
-
-      results.push({
-        args: t.args,
-        expected,
-        actual,
-        passed,
-      });
+      return res.json({ results });
     }
 
-    res.json({ results });
+    if (language === "python") {
+      for (const t of problem.testCases) {
+        const harness = `
+import builtins
+_real_print = print
+def print(*args, **kwargs):
+    pass
+
+${code}
+
+try:
+    result = solve(*${JSON.stringify(t.args)})
+    _real_print("__output:" + str(result))
+except Exception as e:
+    _real_print("__output:Error")
+        `;
+
+        const response = await runWithRetry({
+          language: "python",
+          version: "*",
+          files: [{ content: harness }],
+        });
+
+        const stdout = response.data.run.stdout || "";
+        const match = stdout.match(/__output:(.*)/);
+        const actual = match ? match[1].trim() : "";
+        const passed = actual === t.expected;
+
+        results.push({
+          args: t.args,
+          expected: t.expected,
+          actual,
+          passed,
+        });
+      }
+
+      return res.json({ results });
+    }
+
+    return res.status(400).json({ error: "Unsupported language" });
   } catch (err) {
     res.status(500).json({
       error: "JudgeError",
