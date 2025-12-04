@@ -87,6 +87,54 @@ ${declBlock}    auto __result = solve(${call});
 `;
 }
 
+function buildJavaHarness(code, args) {
+  const decls = [];
+  const callArgs = [];
+
+  args.forEach((arg, index) => {
+    const name = `arg${index}`;
+    if (Array.isArray(arg)) {
+      const values = arg.join(", ");
+      decls.push(`int[] ${name} = new int[]{${values}};`);
+      callArgs.push(name);
+    } else if (typeof arg === "number") {
+      decls.push(`int ${name} = ${arg};`);
+      callArgs.push(name);
+    } else if (typeof arg === "string") {
+      const escaped = arg
+        .replace(/\\/g, "\\\\")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, "\\n");
+      decls.push(`String ${name} = "${escaped}";`);
+      callArgs.push(name);
+    } else {
+      const escaped = JSON.stringify(arg)
+        .replace(/\\/g, "\\\\")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, "\\n");
+      decls.push(`String ${name} = "${escaped}";`);
+      callArgs.push(name);
+    }
+  });
+
+  const declBlock =
+    decls.length > 0
+      ? decls.map((line) => "        " + line).join("\n") + "\n"
+      : "";
+
+  const call = callArgs.join(", ");
+
+  return `${code}
+
+public class Main {
+    public static void main(String[] args) {
+${declBlock}        Object result = Solution.solve(${call});
+        System.out.println("__output:" + String.valueOf(result));
+    }
+}
+`;
+}
+
 app.post("/judge", async (req, res) => {
   const { language, code, questionId } = req.body;
 
@@ -186,6 +234,33 @@ except Exception as e:
 
         const response = await runWithRetry({
           language: "cpp",
+          version: "*",
+          files: [{ content: harness }],
+        });
+
+        const stdout = response.data.run.stdout || "";
+        const match = stdout.match(/__output:(.*)/);
+        const actual = match ? match[1].trim() : "";
+        const expected = t.expected;
+        const passed = actual === expected;
+
+        results.push({
+          args: t.args,
+          expected,
+          actual,
+          passed,
+        });
+      }
+
+      return res.json({ results });
+    }
+
+    if (language === "java") {
+      for (const t of problem.testCases) {
+        const harness = buildJavaHarness(code, t.args);
+
+        const response = await runWithRetry({
+          language: "java",
           version: "*",
           files: [{ content: harness }],
         });
