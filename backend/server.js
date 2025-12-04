@@ -65,11 +65,9 @@ function buildCppHarness(code, args) {
     }
   });
 
-  const declBlock =
-    decls.length > 0
-      ? decls.map((line) => "    " + line).join("\n") + "\n"
-      : "";
-
+  const declBlock = decls.length
+    ? decls.map((l) => "    " + l).join("\n") + "\n"
+    : "";
   const call = callArgs.join(", ");
 
   return `#include <bits/stdc++.h>
@@ -117,11 +115,9 @@ function buildJavaHarness(code, args) {
     }
   });
 
-  const declBlock =
-    decls.length > 0
-      ? decls.map((line) => "        " + line).join("\n") + "\n"
-      : "";
-
+  const declBlock = decls.length
+    ? decls.map((l) => "        " + l).join("\n") + "\n"
+    : "";
   const call = callArgs.join(", ");
 
   return `${code}
@@ -147,9 +143,7 @@ app.post("/judge", async (req, res) => {
         const harness = `
 const realLog = console.log;
 console.log = (msg) => {
-  if (String(msg).startsWith("__output:")) {
-    realLog(msg);
-  }
+  if (String(msg).startsWith("__output:")) realLog(msg);
 };
 
 ${code}
@@ -174,15 +168,9 @@ console.log("__output:" + JSON.stringify(__result));
         const stdout = response.data.run.stdout || "";
         const match = stdout.match(/__output:(.*)/);
         const actual = match ? match[1].trim() : "";
-        const expected = t.expected;
-        const passed = actual === expected;
+        const passed = actual === t.expected;
 
-        results.push({
-          args: t.args,
-          expected,
-          actual,
-          passed,
-        });
+        results.push({ args: t.args, expected: t.expected, actual, passed });
       }
 
       return res.json({ results });
@@ -193,15 +181,14 @@ console.log("__output:" + JSON.stringify(__result));
         const harness = `
 import builtins
 _real_print = print
-def print(*args, **kwargs):
-    pass
+def print(*args, **kwargs): pass
 
 ${code}
 
 try:
     result = solve(*${JSON.stringify(t.args)})
     _real_print("__output:" + str(result))
-except Exception as e:
+except:
     _real_print("__output:Error")
 `;
 
@@ -214,15 +201,9 @@ except Exception as e:
         const stdout = response.data.run.stdout || "";
         const match = stdout.match(/__output:(.*)/);
         const actual = match ? match[1].trim() : "";
-        const expected = t.expected;
-        const passed = actual === expected;
+        const passed = actual === t.expected;
 
-        results.push({
-          args: t.args,
-          expected,
-          actual,
-          passed,
-        });
+        results.push({ args: t.args, expected: t.expected, actual, passed });
       }
 
       return res.json({ results });
@@ -241,15 +222,9 @@ except Exception as e:
         const stdout = response.data.run.stdout || "";
         const match = stdout.match(/__output:(.*)/);
         const actual = match ? match[1].trim() : "";
-        const expected = t.expected;
-        const passed = actual === expected;
+        const passed = actual === t.expected;
 
-        results.push({
-          args: t.args,
-          expected,
-          actual,
-          passed,
-        });
+        results.push({ args: t.args, expected: t.expected, actual, passed });
       }
 
       return res.json({ results });
@@ -257,7 +232,11 @@ except Exception as e:
 
     if (language === "java") {
       for (const t of problem.testCases) {
-        const harness = buildJavaHarness(code, t.args);
+        const sanitized = code
+          .replace(/public\s+class/g, "class")
+          .replace(/public\s+static/g, "static");
+
+        const harness = buildJavaHarness(sanitized, t.args);
 
         const response = await runWithRetry({
           language: "java",
@@ -268,15 +247,9 @@ except Exception as e:
         const stdout = response.data.run.stdout || "";
         const match = stdout.match(/__output:(.*)/);
         const actual = match ? match[1].trim() : "";
-        const expected = t.expected;
-        const passed = actual === expected;
+        const passed = actual === t.expected;
 
-        results.push({
-          args: t.args,
-          expected,
-          actual,
-          passed,
-        });
+        results.push({ args: t.args, expected: t.expected, actual, passed });
       }
 
       return res.json({ results });
@@ -284,10 +257,7 @@ except Exception as e:
 
     return res.status(400).json({ error: "Unsupported language" });
   } catch (err) {
-    res.status(500).json({
-      error: "JudgeError",
-      message: err.message,
-    });
+    res.status(500).json({ error: "JudgeError", message: err.message });
   }
 });
 
