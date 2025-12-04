@@ -170,6 +170,7 @@ except:
         expected: t.expected,
         actual,
         passed: actual === t.expected,
+        debug: language === "java" ? { stdout, stderr, harness } : undefined,
       });
     }
 
