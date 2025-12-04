@@ -78,8 +78,16 @@ export function CodingPracticePage() {
     javascript: `// write your code here\n`,
     cpp: `#include <bits/stdc++.h>
 using namespace std;
+long long solve(){
+    return 0;
+}
 int main(){
     return 0;
+}`,
+    java: `public class Solution {
+    public static int solve() {
+        return 0;
+    }
 }`,
   };
 
@@ -126,6 +134,7 @@ int main(){
     { value: "python", label: "Python" },
     { value: "javascript", label: "JavaScript" },
     { value: "cpp", label: "C++" },
+    { value: "java", label: "Java" },
   ];
 
   function formatResults(results) {
