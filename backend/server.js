@@ -28,7 +28,7 @@ async function runWithRetry(payload, retries = 3, delay = 300) {
       const status = err.response?.status;
 
       if (status === 429 && i < retries - 1) {
-        await new Promise((resolve) => setTimeout(resolve, delay));
+        await new Promise((r) => setTimeout(r, delay));
         continue;
       }
 
@@ -41,6 +41,10 @@ app.post("/judge", async (req, res) => {
   const { language, code, questionId } = req.body;
 
   try {
+    if (!["python", "javascript"].includes(language)) {
+      return res.json({ error: "Unsupported language" });
+    }
+
     const problem = loadProblem(questionId);
     const results = [];
 
@@ -55,10 +59,7 @@ app.post("/judge", async (req, res) => {
       const rawActual = (response.data.run.stdout || "").trim();
       const rawExpected = t.expected.trim();
 
-      function normalize(str) {
-        return str.replace(/\s+/g, "").toLowerCase();
-      }
-
+      const normalize = (str) => str.replace(/\s+/g, "").toLowerCase();
       const passed = normalize(rawActual) === normalize(rawExpected);
 
       results.push({

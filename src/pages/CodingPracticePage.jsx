@@ -72,7 +72,10 @@ export function CodingPracticePage() {
 
   const starter = {
     python: `# write your code here\n`,
-    javascript: `// write your code here\n`,
+    javascript: `import fs from "fs";
+const input = fs.readFileSync(0, "utf8").trim().split("\\n");
+
+// write your code here`,
     cpp: `#include <bits/stdc++.h>
 using namespace std;
 int main(){
@@ -138,18 +141,17 @@ Result: ${r.passed ? "✔ PASS" : "✘ FAIL"}`
       .join("\n\n");
   }
 
-  const resetEditorState = (forceSolvedReset = false) => {
+  const resetEditorState = () => {
     setOutput("");
     setAllPassed(false);
     setCode(starter[language]);
-    if (forceSolvedReset) setCode(starter[language]);
   };
 
   useEffect(() => {
     setTimeout(() => {
       resetEditorState(true);
     }, 0);
-  }, [currentIndex, selectedCategory]);
+  }, [currentIndex, selectedCategory, language]);
 
   const runCode = async () => {
     setOutput("Running tests...");
