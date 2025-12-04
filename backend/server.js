@@ -67,7 +67,7 @@ function buildJavaHarness(code, args) {
   args.forEach((arg, idx) => {
     const name = `arg${idx}`;
     if (Array.isArray(arg)) {
-      decls.push(`int[] ${name} = new int[]{${arg.join(", ")}};`);
+      decls.push(`int[] ${name} = new int[]{${arg.join(",")}};`);
       callArgs.push(name);
     } else if (typeof arg === "number") {
       decls.push(`int ${name} = ${arg};`);
@@ -80,16 +80,19 @@ function buildJavaHarness(code, args) {
 
   let userCode = code.trim();
   userCode = userCode.replace(/public\s+class\s+Solution/g, "class Solution");
+  userCode = userCode.replace(/public\s+static/g, "static");
 
   return `
+import java.util.*;
+
 ${userCode}
 
 public class Main {
     public static void main(String[] args) {
         try {
 ${decls.map((d) => "            " + d).join("\n")}
-            Object result = Solution.solve(${callArgs.join(", ")});
-            System.out.println("__output:" + result);
+            Object result = Solution.solve(${callArgs.join(",")});
+            System.out.println("__output:" + String.valueOf(result));
         } catch (Exception e) {
             System.out.println("__output:Error");
         }
@@ -151,10 +154,17 @@ except:
         harness = buildJavaHarness(code, t.args);
       }
 
+      const files =
+        language === "java"
+          ? [{ name: "Main.java", content: harness }]
+          : language === "cpp"
+          ? [{ name: "main.cpp", content: harness }]
+          : [{ name: "main", content: harness }];
+
       const response = await runWithRetry({
         language: pistonLang,
         version: "*",
-        files: [{ content: harness }],
+        files,
       });
 
       const stdout = response.data.run.stdout || "";
@@ -170,7 +180,6 @@ except:
         expected: t.expected,
         actual,
         passed: actual === t.expected,
-        debug: language === "java" ? { stdout, stderr, harness } : undefined,
       });
     }
 
