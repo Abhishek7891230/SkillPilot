@@ -34,14 +34,12 @@ function buildCppHarness(code, args) {
     const name = `arg${index}`;
     if (Array.isArray(arg)) {
       decls.push(`vector<long long> ${name} = {${arg.join(",")}};`);
-      callArgs.push(name);
     } else if (typeof arg === "number") {
       decls.push(`long long ${name} = ${arg};`);
-      callArgs.push(name);
     } else {
       decls.push(`string ${name} = "${String(arg).replace(/"/g, '\\"')}";`);
-      callArgs.push(name);
     }
+    callArgs.push(name);
   });
 
   return `
@@ -68,25 +66,29 @@ function buildJavaHarness(code, args) {
     const name = `arg${idx}`;
     if (Array.isArray(arg)) {
       decls.push(`int[] ${name} = new int[]{${arg.join(",")}};`);
-      callArgs.push(name);
     } else if (typeof arg === "number") {
       decls.push(`int ${name} = ${arg};`);
-      callArgs.push(name);
     } else {
       decls.push(`String ${name} = "${String(arg).replace(/"/g, '\\"')}";`);
-      callArgs.push(name);
     }
+    callArgs.push(name);
   });
 
+  const safeCode = code
+    .replace(/public\s+class\s+Solution/, "class Solution")
+    .replace(/public\s+static/, "static");
+
   return `
-${code}
+import java.util.*;
+
+${safeCode}
 
 public class Main {
     public static void main(String[] args) {
         try {
 ${decls.map((d) => "            " + d).join("\n")}
             Object result = Solution.solve(${callArgs.join(",")});
-            System.out.println("__output:" + String.valueOf(result));
+            System.out.println("__output:" + result);
         } catch (Exception e) {
             System.out.println("__output:Error");
         }
@@ -155,7 +157,6 @@ except:
       });
 
       const stdout = response.data.run.stdout + response.data.run.stderr;
-
       const match = stdout.match(/__output:(.*)/);
       const actual = match ? match[1].trim() : "Error";
 
