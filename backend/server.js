@@ -41,6 +41,7 @@ function buildCppHarness(code, args) {
 
   args.forEach((arg, index) => {
     const name = `arg${index}`;
+
     if (Array.isArray(arg)) {
       const values = arg.join(", ");
       decls.push(`vector<long long> ${name} = {${values}};`);
@@ -68,6 +69,7 @@ function buildCppHarness(code, args) {
   const declBlock = decls.length
     ? decls.map((l) => "    " + l).join("\n") + "\n"
     : "";
+
   const call = callArgs.join(", ");
 
   return `#include <bits/stdc++.h>
@@ -91,6 +93,7 @@ function buildJavaHarness(code, args) {
 
   args.forEach((arg, index) => {
     const name = `arg${index}`;
+
     if (Array.isArray(arg)) {
       const values = arg.join(", ");
       decls.push(`int[] ${name} = new int[]{${values}};`);
@@ -115,12 +118,16 @@ function buildJavaHarness(code, args) {
     }
   });
 
-  const declBlock = decls.length
-    ? decls.map((l) => "        " + l).join("\n") + "\n"
-    : "";
+  const declBlock =
+    decls.length > 0 ? decls.map((l) => "        " + l).join("\n") + "\n" : "";
+
   const call = callArgs.join(", ");
 
-  return `${code}
+  return `
+import java.util.*;
+import java.io.*;
+
+${code}
 
 public class Main {
     public static void main(String[] args) {
@@ -231,17 +238,23 @@ except:
     }
 
     if (language === "java") {
-      for (const t of problem.testCases) {
-        const sanitized = code
-          .replace(/public\s+class/g, "class")
-          .replace(/public\s+static/g, "static");
+      const sanitized = code
+        .replace(/public\s+class/g, "class")
+        .replace(/public\s+static/g, "static")
+        .replace(/\\/g, "\\\\");
 
+      for (const t of problem.testCases) {
         const harness = buildJavaHarness(sanitized, t.args);
 
         const response = await runWithRetry({
           language: "java",
           version: "*",
-          files: [{ content: harness }],
+          files: [
+            {
+              name: "Main.java",
+              content: harness,
+            },
+          ],
         });
 
         const stdout = response.data.run.stdout || "";
