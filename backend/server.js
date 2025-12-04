@@ -34,12 +34,14 @@ function buildCppHarness(code, args) {
     const name = `arg${index}`;
     if (Array.isArray(arg)) {
       decls.push(`vector<long long> ${name} = {${arg.join(",")}};`);
+      callArgs.push(name);
     } else if (typeof arg === "number") {
       decls.push(`long long ${name} = ${arg};`);
+      callArgs.push(name);
     } else {
       decls.push(`string ${name} = "${String(arg).replace(/"/g, '\\"')}";`);
+      callArgs.push(name);
     }
-    callArgs.push(name);
   });
 
   return `
@@ -65,32 +67,29 @@ function buildJavaHarness(code, args) {
   args.forEach((arg, idx) => {
     const name = `arg${idx}`;
     if (Array.isArray(arg)) {
-      decls.push(`int[] ${name} = new int[]{${arg.join(",")}};`);
+      decls.push(`long[] ${name} = new long[]{${arg.join("L,")}L};`);
+      callArgs.push(name);
     } else if (typeof arg === "number") {
-      decls.push(`int ${name} = ${arg};`);
+      decls.push(`long ${name} = ${arg}L;`);
+      callArgs.push(name);
     } else {
       decls.push(`String ${name} = "${String(arg).replace(/"/g, '\\"')}";`);
+      callArgs.push(name);
     }
-    callArgs.push(name);
   });
 
-  const safeCode = code
-    .replace(/public\s+class\s+Solution/, "class Solution")
-    .replace(/public\s+static/, "static");
-
   return `
-import java.util.*;
-
-${safeCode}
+${code}
 
 public class Main {
     public static void main(String[] args) {
         try {
 ${decls.map((d) => "            " + d).join("\n")}
-            Object result = Solution.solve(${callArgs.join(",")});
+            Object result = Solution.solve(${callArgs.join(", ")});
             System.out.println("__output:" + result);
         } catch (Exception e) {
             System.out.println("__output:Error");
+            e.printStackTrace();
         }
     }
 }
@@ -157,10 +156,12 @@ except:
       });
 
       const stdout = response.data.run.stdout + response.data.run.stderr;
+
       const match = stdout.match(/__output:(.*)/);
       const actual = match ? match[1].trim() : "Error";
 
       results.push({
+        input: JSON.stringify(t.args),
         args: t.args,
         expected: t.expected,
         actual,
