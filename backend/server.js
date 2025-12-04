@@ -35,6 +35,58 @@ async function runWithRetry(payload, retries = 3, delay = 300) {
   }
 }
 
+function buildCppHarness(code, args) {
+  const decls = [];
+  const callArgs = [];
+
+  args.forEach((arg, index) => {
+    const name = `arg${index}`;
+    if (Array.isArray(arg)) {
+      const values = arg.join(", ");
+      decls.push(`vector<long long> ${name} = {${values}};`);
+      callArgs.push(name);
+    } else if (typeof arg === "number") {
+      decls.push(`long long ${name} = ${arg};`);
+      callArgs.push(name);
+    } else if (typeof arg === "string") {
+      const escaped = arg
+        .replace(/\\/g, "\\\\")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, "\\n");
+      decls.push(`string ${name} = "${escaped}";`);
+      callArgs.push(name);
+    } else {
+      const escaped = JSON.stringify(arg)
+        .replace(/\\/g, "\\\\")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, "\\n");
+      decls.push(`string ${name} = "${escaped}";`);
+      callArgs.push(name);
+    }
+  });
+
+  const declBlock =
+    decls.length > 0
+      ? decls.map((line) => "    " + line).join("\n") + "\n"
+      : "";
+
+  const call = callArgs.join(", ");
+
+  return `#include <bits/stdc++.h>
+using namespace std;
+
+${code}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+${declBlock}    auto __result = solve(${call});
+    cout << "__output:" << __result;
+    return 0;
+}
+`;
+}
+
 app.post("/judge", async (req, res) => {
   const { language, code, questionId } = req.body;
 
@@ -45,25 +97,25 @@ app.post("/judge", async (req, res) => {
     if (language === "javascript") {
       for (const t of problem.testCases) {
         const harness = `
-          const realLog = console.log;
-          console.log = (msg) => {
-            if (String(msg).startsWith("__output:")) {
-              realLog(msg);
-            }
-          };
+const realLog = console.log;
+console.log = (msg) => {
+  if (String(msg).startsWith("__output:")) {
+    realLog(msg);
+  }
+};
 
-          ${code}
+${code}
 
-          let __result;
-          try {
-            __result = solve(...${JSON.stringify(t.args)});
-          } catch (err) {
-            console.log("__output:Error");
-            process.exit(0);
-          }
+let __result;
+try {
+  __result = solve(...${JSON.stringify(t.args)});
+} catch (err) {
+  console.log("__output:Error");
+  process.exit(0);
+}
 
-          console.log("__output:" + JSON.stringify(__result));
-        `;
+console.log("__output:" + JSON.stringify(__result));
+`;
 
         const response = await runWithRetry({
           language: "javascript",
@@ -74,11 +126,12 @@ app.post("/judge", async (req, res) => {
         const stdout = response.data.run.stdout || "";
         const match = stdout.match(/__output:(.*)/);
         const actual = match ? match[1].trim() : "";
-        const passed = actual === t.expected;
+        const expected = t.expected;
+        const passed = actual === expected;
 
         results.push({
           args: t.args,
-          expected: t.expected,
+          expected,
           actual,
           passed,
         });
@@ -102,7 +155,7 @@ try:
     _real_print("__output:" + str(result))
 except Exception as e:
     _real_print("__output:Error")
-        `;
+`;
 
         const response = await runWithRetry({
           language: "python",
@@ -113,11 +166,39 @@ except Exception as e:
         const stdout = response.data.run.stdout || "";
         const match = stdout.match(/__output:(.*)/);
         const actual = match ? match[1].trim() : "";
-        const passed = actual === t.expected;
+        const expected = t.expected;
+        const passed = actual === expected;
 
         results.push({
           args: t.args,
-          expected: t.expected,
+          expected,
+          actual,
+          passed,
+        });
+      }
+
+      return res.json({ results });
+    }
+
+    if (language === "cpp") {
+      for (const t of problem.testCases) {
+        const harness = buildCppHarness(code, t.args);
+
+        const response = await runWithRetry({
+          language: "cpp",
+          version: "*",
+          files: [{ content: harness }],
+        });
+
+        const stdout = response.data.run.stdout || "";
+        const match = stdout.match(/__output:(.*)/);
+        const actual = match ? match[1].trim() : "";
+        const expected = t.expected;
+        const passed = actual === expected;
+
+        results.push({
+          args: t.args,
+          expected,
           actual,
           passed,
         });
