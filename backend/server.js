@@ -158,6 +158,25 @@ except Exception as e:
         harness = buildJavaHarness(code, t.args);
       }
 
+      if (language === "typescript") {
+        fileName = "main.ts";
+        harness = `
+const realLog = console.log;
+console.log = (msg) => {
+  if (String(msg).startsWith("__output:")) realLog(msg);
+};
+
+${code}
+
+try {
+  const r = solve(...${JSON.stringify(t.args)});
+  console.log("__output:" + JSON.stringify(r));
+} catch (err) {
+  console.log("__output:" + err.message);
+}
+`;
+      }
+
       const response = await runWithRetry({
         language: pistonLang,
         version: "*",

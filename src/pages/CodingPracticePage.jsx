@@ -84,10 +84,13 @@ long long solve(){
 int main(){
     return 0;
 }`,
-    java: `class Solution {
-    public static int solve(int a, int b) {
-        return 0;
+    java: `public class Solution {
+    public static int solve() {
+        //write your code here
     }
+}`,
+    typescript: `function solve(...args: any[]): any {
+    return 0;
 }`,
   };
 
@@ -135,6 +138,7 @@ int main(){
     { value: "javascript", label: "JavaScript" },
     { value: "cpp", label: "C++" },
     { value: "java", label: "Java" },
+    { value: "typescript", label: "TypeScript" },
   ];
 
   function formatResults(results) {
