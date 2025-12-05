@@ -47,13 +47,13 @@ function buildCppHarness(code, args) {
 using namespace std;
 ${code}
 int main(){
-${decls.map((d) => "    " + d).join("\n")}
-    try {
-        auto res = solve(${callArgs.join(",")});
-        cout << "__output:" << res;
-    } catch (...) {
-        cout << "__output:Runtime Error";
-    }
+${decls.map((d) => "    " + d).join("\n")}
+    try {
+        auto res = solve(${callArgs.join(",")});
+        cout << "__output:" << res;
+    } catch (...) {
+        cout << "__output:Runtime Error";
+    }
 }
 `;
 }
@@ -88,19 +88,19 @@ import java.io.*;
 import java.math.*;
 
 public class Main {
-    // Inject the user's solve method(s) directly into the Main class
-    ${methodBody}
+    // Inject the user's solve method(s) directly into the Main class
+    ${methodBody}
 
-    public static void main(String[] args) {
-        try {
-${decls.map((d) => "            " + d).join("\n")}
-            // Call the solve method directly, as it's now part of Main
-            Object result = solve(${callArgs.join(",")}); 
-            System.out.println("__output:" + String.valueOf(result));
-        } catch (Exception e) {
-            System.out.println("__output:" + e.toString());
-        }
-    }
+    public static void main(String[] args) {
+        try {
+${decls.map((d) => "            " + d).join("\n")}
+            // Call the solve method directly, as it's now part of Main
+            Object result = solve(${callArgs.join(",")}); 
+            System.out.println("__output:" + String.valueOf(result));
+        } catch (Exception e) {
+            System.out.println("__output:" + e.toString());
+        }
+    }
 }
 `;
 }
@@ -121,13 +121,13 @@ app.post("/judge", async (req, res) => {
         fileName = "main.js";
         harness = `
 const realLog = console.log;
-console.log = (msg) => { if (String(msg).startsWith("__output:")) realLog(msg); };
+console.log = (msg) => { if (String(msg).indexOf("__output:") === 0) realLog(msg); };
 ${code}
 try {
-  const r = solve(...${JSON.stringify(t.args)});
-  console.log("__output:" + JSON.stringify(r));
+  const r = solve(...${JSON.stringify(t.args)});
+  console.log("__output:" + JSON.stringify(r));
 } catch (err) {
-  console.log("__output:" + err.message);
+  console.log("__output:" + String(err));
 }
 `;
       }
@@ -141,10 +141,10 @@ _real_print = print
 def print(*args, **kwargs): pass
 ${code}
 try:
-    result = solve(*${JSON.stringify(t.args)})
-    _real_print("__output:" + str(result))
+    result = solve(*${JSON.stringify(t.args)})
+    _real_print("__output:" + str(result))
 except Exception as e:
-    _real_print("__output:" + str(e))
+    _real_print("__output:" + str(e))
 `;
       }
 
@@ -161,18 +161,21 @@ except Exception as e:
       if (language === "typescript") {
         fileName = "main.ts";
         harness = `
+// Fix 1: Use indexOf(0) instead of startsWith() for broader JS compatibility.
 const realLog = console.log;
 console.log = (msg) => {
-  if (String(msg).startsWith("__output:")) realLog(msg);
+  if (String(msg).indexOf("__output:") === 0) realLog(msg);
 };
 
 ${code}
 
 try {
-  const r = solve(...${JSON.stringify(t.args)});
-  console.log("__output:" + JSON.stringify(r));
+  // Fix 2: Cast the function call to 'any' to bypass strict TypeScript type checking 
+  // about the spread operator on unknown array length.
+  const r = (solve as any)(...${JSON.stringify(t.args)});
+  console.log("__output:" + JSON.stringify(r));
 } catch (err) {
-  console.log("__output:" + err.message);
+  console.log("__output:" + String(err));
 }
 `;
       }
