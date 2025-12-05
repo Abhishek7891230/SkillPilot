@@ -97,7 +97,6 @@ ${decls.map((d) => "            " + d).join("\n")}
             Object result = Solution.solve(${callArgs.join(",")});
             System.out.println("__output:" + String.valueOf(result));
         } catch (Exception e) {
-            // e.printStackTrace(); // Uncomment for debugging
             System.out.println("__output:Error");
         }
     }
@@ -115,8 +114,10 @@ app.post("/judge", async (req, res) => {
     for (const t of problem.testCases) {
       let harness;
       let pistonLang = language;
+      let fileName = "main.txt";
 
       if (language === "javascript") {
+        fileName = "main.js";
         harness = `
 const realLog = console.log;
 console.log = (msg) => {
@@ -135,6 +136,7 @@ try {
       }
 
       if (language === "python") {
+        fileName = "main.py";
         harness = `
 import builtins
 import json
@@ -152,17 +154,19 @@ except:
       }
 
       if (language === "cpp") {
+        fileName = "main.cpp";
         harness = buildCppHarness(code, t.args);
       }
 
       if (language === "java") {
+        fileName = "Main.java";
         harness = buildJavaHarness(code, t.args);
       }
 
       const response = await runWithRetry({
         language: pistonLang,
         version: "*",
-        files: [{ content: harness }],
+        files: [{ name: fileName, content: harness }],
       });
 
       const stdout = response.data.run.stdout + response.data.run.stderr;
@@ -170,11 +174,11 @@ except:
       const match = stdout.match(/__output:(.*)/);
       const actual = match ? match[1].trim() : "Error";
 
+      const inputStr = t.args.map((a) => JSON.stringify(a)).join(", ");
+
       results.push({
         args: t.args,
-        input: JSON.stringify(t.args)
-          .replace(/^\[|\]$/g, "")
-          .replace(/,/g, ", "),
+        input: inputStr,
         expected: t.expected,
         actual,
         passed: actual === t.expected,
@@ -183,7 +187,7 @@ except:
 
     return res.json({ results });
   } catch (err) {
-    console.error(err);
+    console.error("Judge Error:", err.message);
     return res.status(500).json({ error: "JudgeError", message: err.message });
   }
 });
