@@ -26,58 +26,6 @@ async function runWithRetry(payload, retries = 3, delay = 300) {
   }
 }
 
-function cleanJavaUserCode(code) {
-  let cleaned = code
-    .replace(/public\s+class\s+\w+/g, "")
-    .replace(/class\s+\w+/g, "")
-    .replace(/public\s+static/g, "static")
-    .replace(/public\s+/g, "")
-    .trim();
-
-  cleaned = cleaned.replace(/^class[\s\S]*?{/, "");
-  cleaned = cleaned.replace(/}[\s]*$/, "");
-  return cleaned.trim();
-}
-
-function buildJavaHarness(code, args) {
-  const decls = [];
-  const callArgs = [];
-
-  args.forEach((arg, idx) => {
-    const name = `arg${idx}`;
-    if (Array.isArray(arg)) {
-      decls.push(`int[] ${name} = new int[]{${arg.join(",")}};`);
-    } else if (typeof arg === "number") {
-      decls.push(`int ${name} = ${arg};`);
-    } else {
-      decls.push(`String ${name} = "${String(arg).replace(/"/g, '\\"')}";`);
-    }
-    callArgs.push(name);
-  });
-
-  const userMethodBody = cleanJavaUserCode(code);
-
-  return `
-import java.util.*;
-
-class SolutionWrapper {
-${userMethodBody}
-}
-
-public class Main {
-    public static void main(String[] args) {
-        try {
-${decls.map((d) => "            " + d).join("\n")}
-            Object result = SolutionWrapper.solve(${callArgs.join(",")});
-            System.out.println("__output:" + result);
-        } catch (Exception e) {
-            System.out.println("__output:Error");
-        }
-    }
-}
-`;
-}
-
 function buildCppHarness(code, args) {
   const decls = [];
   const callArgs = [];
@@ -112,6 +60,51 @@ ${decls.map((d) => "    " + d).join("\n")}
 `;
 }
 
+function buildJavaHarness(code, args) {
+  const decls = [];
+  const callArgs = [];
+
+  args.forEach((arg, idx) => {
+    const name = `arg${idx}`;
+    if (Array.isArray(arg)) {
+      decls.push(`int[] ${name} = new int[]{${arg.join(",")}};`);
+      callArgs.push(name);
+    } else if (typeof arg === "number") {
+      decls.push(`int ${name} = ${arg};`);
+      callArgs.push(name);
+    } else {
+      decls.push(`String ${name} = "${String(arg).replace(/"/g, '\\"')}";`);
+      callArgs.push(name);
+    }
+  });
+
+  const classFixedCode = code.replace(
+    /public\s+class\s+Solution/,
+    "class Solution"
+  );
+
+  return `
+import java.util.*;
+import java.io.*;
+import java.math.*;
+
+${classFixedCode}
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+${decls.map((d) => "            " + d).join("\n")}
+            Object result = Solution.solve(${callArgs.join(",")});
+            System.out.println("__output:" + String.valueOf(result));
+        } catch (Exception e) {
+            // e.printStackTrace(); // Uncomment for debugging
+            System.out.println("__output:Error");
+        }
+    }
+}
+`;
+}
+
 app.post("/judge", async (req, res) => {
   const { language, code, questionId } = req.body;
 
@@ -121,9 +114,15 @@ app.post("/judge", async (req, res) => {
 
     for (const t of problem.testCases) {
       let harness;
+      let pistonLang = language;
 
       if (language === "javascript") {
         harness = `
+const realLog = console.log;
+console.log = (msg) => {
+  if (String(msg).startsWith("__output:")) realLog(msg);
+};
+
 ${code}
 
 try {
@@ -137,13 +136,18 @@ try {
 
       if (language === "python") {
         harness = `
+import builtins
+import json
+_real_print = print
+def print(*args, **kwargs): pass
+
 ${code}
 
 try:
     result = solve(*${JSON.stringify(t.args)})
-    print("__output:" + str(result))
+    _real_print("__output:" + str(result))
 except:
-    print("__output:Error")
+    _real_print("__output:Error")
 `;
       }
 
@@ -155,28 +159,22 @@ except:
         harness = buildJavaHarness(code, t.args);
       }
 
-      const files =
-        language === "java"
-          ? [{ name: "Main.java", content: harness }]
-          : language === "cpp"
-          ? [{ name: "main.cpp", content: harness }]
-          : [{ content: harness }];
-
       const response = await runWithRetry({
-        language,
+        language: pistonLang,
         version: "*",
-        files,
+        files: [{ content: harness }],
       });
 
-      const stdout = response.data.run.stdout || "";
-      const stderr = response.data.run.stderr || "";
-      const combined = stdout + stderr;
+      const stdout = response.data.run.stdout + response.data.run.stderr;
 
-      const match = combined.match(/__output:(.*)/);
+      const match = stdout.match(/__output:(.*)/);
       const actual = match ? match[1].trim() : "Error";
 
       results.push({
-        input: JSON.stringify(t.args),
+        args: t.args,
+        input: JSON.stringify(t.args)
+          .replace(/^\[|\]$/g, "")
+          .replace(/,/g, ", "),
         expected: t.expected,
         actual,
         passed: actual === t.expected,
@@ -185,6 +183,7 @@ except:
 
     return res.json({ results });
   } catch (err) {
+    console.error(err);
     return res.status(500).json({ error: "JudgeError", message: err.message });
   }
 });
