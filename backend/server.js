@@ -74,10 +74,12 @@ function buildJavaHarness(code, args) {
       callArgs.push(name);
     }
   });
+
   let methodBody = code.replace(/public\s+class\s+Solution\s*\{/, "").trim();
   if (methodBody.endsWith("}")) {
     methodBody = methodBody.slice(0, methodBody.lastIndexOf("}")).trim();
   }
+
   return `
 import java.util.*;
 import java.io.*;
@@ -99,21 +101,21 @@ ${decls.map((d) => "            " + d).join("\n")}
 `;
 }
 
+function stripTypescriptTypes(code) {
+  return code
+    .replace(/: *[A-Za-z0-9_\[\]\|<>]+/g, "")
+    .replace(/<[^>]+>/g, "")
+    .replace(/interface *[^{]+{[^}]+}/g, "")
+    .replace(/type *[A-Za-z0-9_]+ *= *[^;]+;/g, "");
+}
+
 function buildTSHarness(code, args) {
+  const cleaned = stripTypescriptTypes(code);
+
   return `
-const ts = require("typescript");
-const fs = require("fs");
-
-const userTS = \`${code.replace(/`/g, "\\`")}\`;
-
-const compiled = ts.transpileModule(userTS, { compilerOptions: { target: "ES2020", module: "CommonJS" } }).outputText;
-
-fs.writeFileSync("user.js", compiled);
-
-const userModule = require("./user.js");
-
+${cleaned}
 try {
-  const r = userModule.solve(...${JSON.stringify(args)});
+  const r = solve(...${JSON.stringify(args)});
   console.log("__output:" + JSON.stringify(r));
 } catch (err) {
   console.log("__output:" + String(err));
@@ -175,7 +177,7 @@ except Exception as e:
 
       if (language === "typescript") {
         pistonLang = "javascript";
-        fileName = "runner.js";
+        fileName = "main.js";
         harness = buildTSHarness(code, t.args);
       }
 
