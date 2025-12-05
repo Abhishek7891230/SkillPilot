@@ -76,26 +76,28 @@ function buildJavaHarness(code, args) {
     }
   });
 
-  const classFixedCode = code.replace(
-    /public\s+class\s+Solution/,
-    "class Solution"
-  );
+  let methodBody = code.replace(/public\s+class\s+Solution\s*\{/, "");
+  methodBody = methodBody.trim();
+  if (methodBody.endsWith("}")) {
+    methodBody = methodBody.substring(0, methodBody.lastIndexOf("}")).trim();
+  }
 
   return `
 import java.util.*;
 import java.io.*;
 import java.math.*;
 
-${classFixedCode}
-
 public class Main {
+    // Inject the user's solve method(s) directly into the Main class
+    ${methodBody}
+
     public static void main(String[] args) {
         try {
 ${decls.map((d) => "            " + d).join("\n")}
-            Object result = Solution.solve(${callArgs.join(",")});
+            // Call the solve method directly, as it's now part of Main
+            Object result = solve(${callArgs.join(",")}); 
             System.out.println("__output:" + String.valueOf(result));
         } catch (Exception e) {
-            // DEBUGGING: Print the actual error message
             System.out.println("__output:" + e.toString());
         }
     }
