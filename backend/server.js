@@ -29,7 +29,6 @@ async function runWithRetry(payload, retries = 3, delay = 300) {
 function buildCppHarness(code, args) {
   const decls = [];
   const callArgs = [];
-
   args.forEach((arg, index) => {
     const name = `arg${index}`;
     if (Array.isArray(arg)) {
@@ -43,7 +42,6 @@ function buildCppHarness(code, args) {
       callArgs.push(name);
     }
   });
-
   return `
 #include <bits/stdc++.h>
 using namespace std;
@@ -63,7 +61,6 @@ ${decls.map((d) => "    " + d).join("\n")}
 function buildJavaHarness(code, args) {
   const decls = [];
   const callArgs = [];
-
   args.forEach((arg, idx) => {
     const name = `arg${idx}`;
     if (Array.isArray(arg)) {
@@ -77,12 +74,10 @@ function buildJavaHarness(code, args) {
       callArgs.push(name);
     }
   });
-
   let methodBody = code.replace(/public\s+class\s+Solution\s*\{/, "").trim();
   if (methodBody.endsWith("}")) {
     methodBody = methodBody.slice(0, methodBody.lastIndexOf("}")).trim();
   }
-
   return `
 import java.util.*;
 import java.io.*;
@@ -104,6 +99,28 @@ ${decls.map((d) => "            " + d).join("\n")}
 `;
 }
 
+function buildTSHarness(code, args) {
+  return `
+const ts = require("typescript");
+const fs = require("fs");
+
+const userTS = \`${code.replace(/`/g, "\\`")}\`;
+
+const compiled = ts.transpileModule(userTS, { compilerOptions: { target: "ES2020", module: "CommonJS" } }).outputText;
+
+fs.writeFileSync("user.js", compiled);
+
+const userModule = require("./user.js");
+
+try {
+  const r = userModule.solve(...${JSON.stringify(args)});
+  console.log("__output:" + JSON.stringify(r));
+} catch (err) {
+  console.log("__output:" + String(err));
+}
+`;
+}
+
 app.post("/judge", async (req, res) => {
   const { language, code, questionId } = req.body;
 
@@ -114,7 +131,7 @@ app.post("/judge", async (req, res) => {
     for (const t of problem.testCases) {
       let harness;
       let pistonLang = language;
-      let fileName = "main.txt";
+      let fileName;
 
       if (language === "javascript") {
         fileName = "main.js";
@@ -135,7 +152,6 @@ try {
         fileName = "main.py";
         harness = `
 import json
-import builtins
 _real_print = print
 def print(*args, **kwargs): pass
 ${code}
@@ -158,19 +174,9 @@ except Exception as e:
       }
 
       if (language === "typescript") {
-        fileName = "main.ts";
-        harness = `
-const realLog = console.log;
-console.log = (msg) => { if (String(msg).indexOf("__output:") === 0) realLog(msg); };
-${code}
-try {
-  const fn = solve;
-  const r = fn(...${JSON.stringify(t.args)});
-  console.log("__output:" + JSON.stringify(r));
-} catch (err) {
-  console.log("__output:" + String(err));
-}
-`;
+        pistonLang = "javascript";
+        fileName = "runner.js";
+        harness = buildTSHarness(code, t.args);
       }
 
       const response = await runWithRetry({
