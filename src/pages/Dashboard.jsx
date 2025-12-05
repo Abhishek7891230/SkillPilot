@@ -7,6 +7,7 @@ import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase/firestore";
 import { useEffect, useState, useMemo } from "react";
 import { aptitudeQuestions } from "../data/aptitudeQuestions";
+import { codingQuestions } from "../data/codingQuestions";
 
 function GaugeChart({ value, total, label, gradientId }) {
   const progress = total === 0 ? 0 : Math.min(Math.max(value / total, 0), 1);
@@ -43,8 +44,8 @@ function GaugeChart({ value, total, label, gradientId }) {
   );
 }
 
-function calculateAptitudeStats(solvedIds) {
-  const solved = aptitudeQuestions.filter((q) => solvedIds.includes(q.id));
+function calculateStats(allQuestions, solvedIds) {
+  const solved = allQuestions.filter((q) => solvedIds.includes(q.id));
 
   const byDifficulty = {
     easy: solved.filter((q) => q.difficulty === "easy").length,
@@ -53,14 +54,14 @@ function calculateAptitudeStats(solvedIds) {
   };
 
   const totalByDifficulty = {
-    easy: aptitudeQuestions.filter((q) => q.difficulty === "easy").length,
-    medium: aptitudeQuestions.filter((q) => q.difficulty === "medium").length,
-    hard: aptitudeQuestions.filter((q) => q.difficulty === "hard").length,
+    easy: allQuestions.filter((q) => q.difficulty === "easy").length,
+    medium: allQuestions.filter((q) => q.difficulty === "medium").length,
+    hard: allQuestions.filter((q) => q.difficulty === "hard").length,
   };
 
   return {
     total: solved.length,
-    totalQuestions: aptitudeQuestions.length,
+    totalQuestions: allQuestions.length,
     byDifficulty,
     totalByDifficulty,
   };
@@ -102,6 +103,7 @@ export function Dashboard() {
   const [authLoading, setAuthLoading] = useState(true);
   const [dataLoading, setDataLoading] = useState(true);
   const [aptSolvedIds, setAptSolvedIds] = useState([]);
+  const [codingSolvedIds, setCodingSolvedIds] = useState([]);
   const [dailyActivity, setDailyActivity] = useState({});
 
   useEffect(() => {
@@ -124,10 +126,20 @@ export function Dashboard() {
       setDataLoading(true);
 
       try {
-        const solvedRef = doc(db, "users", user.uid, "aptitude", "solved");
-        const solvedSnap = await getDoc(solvedRef);
+        const aptSolvedRef = doc(db, "users", user.uid, "aptitude", "solved");
+        const aptSolvedSnap = await getDoc(aptSolvedRef);
         setAptSolvedIds(
-          solvedSnap.exists() ? solvedSnap.data().solvedQuestions || [] : []
+          aptSolvedSnap.exists()
+            ? aptSolvedSnap.data().solvedQuestions || []
+            : []
+        );
+
+        const codingSolvedRef = doc(db, "users", user.uid, "coding", "solved");
+        const codingSolvedSnap = await getDoc(codingSolvedRef);
+        setCodingSolvedIds(
+          codingSolvedSnap.exists()
+            ? codingSolvedSnap.data().solvedQuestions || []
+            : []
         );
 
         const activityRef = collection(db, "users", user.uid, "dailyActivity");
@@ -140,6 +152,7 @@ export function Dashboard() {
       } catch (err) {
         console.error("Error fetching dashboard data:", err);
         setAptSolvedIds([]);
+        setCodingSolvedIds([]);
         setDailyActivity({});
       } finally {
         setDataLoading(false);
@@ -152,8 +165,13 @@ export function Dashboard() {
   const last30Days = useMemo(() => getLast30Days(), []);
 
   const aptStats = useMemo(
-    () => calculateAptitudeStats(aptSolvedIds),
+    () => calculateStats(aptitudeQuestions, aptSolvedIds),
     [aptSolvedIds]
+  );
+
+  const codingStats = useMemo(
+    () => calculateStats(codingQuestions, codingSolvedIds),
+    [codingSolvedIds]
   );
 
   const streakData = useMemo(
@@ -167,6 +185,8 @@ export function Dashboard() {
     if (count < 10) return "streak-mid";
     return "streak-high";
   };
+
+  const totalSolved = aptStats.total + codingStats.total;
 
   if (authLoading || dataLoading) {
     return (
@@ -219,7 +239,7 @@ export function Dashboard() {
             <div className="profile-stats">
               <div>
                 <span className="stat-label">Total Solved</span>
-                <span className="stat-value">{aptStats.total}</span>
+                <span className="stat-value">{totalSolved}</span>
               </div>
               <div>
                 <span className="stat-label">Active Days</span>
@@ -236,8 +256,8 @@ export function Dashboard() {
               <div className="card-body">
                 <div className="card-left">
                   <GaugeChart
-                    value={0}
-                    total={3762}
+                    value={codingStats.total}
+                    total={codingStats.totalQuestions}
                     label="Total Solved"
                     gradientId="codingGradient"
                   />
@@ -246,15 +266,24 @@ export function Dashboard() {
                   <div className="difficulty-column">
                     <div className="difficulty-box easy">
                       <span>Easy</span>
-                      <strong>0/915</strong>
+                      <strong>
+                        {codingStats.byDifficulty.easy}/
+                        {codingStats.totalByDifficulty.easy}
+                      </strong>
                     </div>
                     <div className="difficulty-box medium">
                       <span>Med</span>
-                      <strong>0/959</strong>
+                      <strong>
+                        {codingStats.byDifficulty.medium}/
+                        {codingStats.totalByDifficulty.medium}
+                      </strong>
                     </div>
                     <div className="difficulty-box hard">
                       <span>Hard</span>
-                      <strong>0/888</strong>
+                      <strong>
+                        {codingStats.byDifficulty.hard}/
+                        {codingStats.totalByDifficulty.hard}
+                      </strong>
                     </div>
                   </div>
                 </div>

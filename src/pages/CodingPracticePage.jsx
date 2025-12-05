@@ -74,24 +74,40 @@ export function CodingPracticePage() {
   );
 
   const starter = {
-    python: `# write your code here\n`,
-    javascript: `// write your code here\n`,
+    python: `def solve(*args):
+    # write your logic here
+    return 0
+`,
+
+    javascript: `function solve(...args) {
+  // write your logic here
+  return 0;
+}
+`,
+
+    typescript: `export function solve(...args: any[]): any {
+  return 0;
+}
+`,
+
     cpp: `#include <bits/stdc++.h>
 using namespace std;
-long long solve(){
+
+long long solve() {
     return 0;
 }
-int main(){
+
+int main() {
     return 0;
-}`,
+}
+`,
+
     java: `public class Solution {
     public static int solve() {
-        //write your code here
+        return 0;
     }
-}`,
-    typescript: `function solve(...args: any[]): any {
-    return 0;
-}`,
+}
+`,
   };
 
   const [language, setLanguage] = useState("python");
