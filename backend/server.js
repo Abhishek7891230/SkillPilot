@@ -29,6 +29,7 @@ async function runWithRetry(payload, retries = 3, delay = 300) {
 function buildCppHarness(code, args) {
   const decls = [];
   const callArgs = [];
+
   args.forEach((arg, index) => {
     const name = `arg${index}`;
     if (Array.isArray(arg)) {
@@ -42,18 +43,19 @@ function buildCppHarness(code, args) {
       callArgs.push(name);
     }
   });
+
   return `
 #include <bits/stdc++.h>
 using namespace std;
 ${code}
-int main(){
-${decls.map((d) => "    " + d).join("\n")}
-    try {
-        auto res = solve(${callArgs.join(",")});
-        cout << "__output:" << res;
-    } catch (...) {
-        cout << "__output:Runtime Error";
-    }
+int main() {
+${decls.map((d) => "    " + d).join("\n")}
+    try {
+        auto res = solve(${callArgs.join(",")});
+        cout << "__output:" << res;
+    } catch (...) {
+        cout << "__output:Runtime Error";
+    }
 }
 `;
 }
@@ -76,10 +78,9 @@ function buildJavaHarness(code, args) {
     }
   });
 
-  let methodBody = code.replace(/public\s+class\s+Solution\s*\{/, "");
-  methodBody = methodBody.trim();
+  let methodBody = code.replace(/public\s+class\s+Solution\s*\{/, "").trim();
   if (methodBody.endsWith("}")) {
-    methodBody = methodBody.substring(0, methodBody.lastIndexOf("}")).trim();
+    methodBody = methodBody.slice(0, methodBody.lastIndexOf("}")).trim();
   }
 
   return `
@@ -88,19 +89,17 @@ import java.io.*;
 import java.math.*;
 
 public class Main {
-    // Inject the user's solve method(s) directly into the Main class
-    ${methodBody}
+${methodBody}
 
-    public static void main(String[] args) {
-        try {
-${decls.map((d) => "            " + d).join("\n")}
-            // Call the solve method directly, as it's now part of Main
-            Object result = solve(${callArgs.join(",")}); 
-            System.out.println("__output:" + String.valueOf(result));
-        } catch (Exception e) {
-            System.out.println("__output:" + e.toString());
-        }
-    }
+    public static void main(String[] args) {
+        try {
+${decls.map((d) => "            " + d).join("\n")}
+            Object result = solve(${callArgs.join(",")});
+            System.out.println("__output:" + String.valueOf(result));
+        } catch (Exception e) {
+            System.out.println("__output:" + e.toString());
+        }
+    }
 }
 `;
 }
@@ -124,10 +123,10 @@ const realLog = console.log;
 console.log = (msg) => { if (String(msg).indexOf("__output:") === 0) realLog(msg); };
 ${code}
 try {
-  const r = solve(...${JSON.stringify(t.args)});
-  console.log("__output:" + JSON.stringify(r));
+  const r = solve(...${JSON.stringify(t.args)});
+  console.log("__output:" + JSON.stringify(r));
 } catch (err) {
-  console.log("__output:" + String(err));
+  console.log("__output:" + String(err));
 }
 `;
       }
@@ -135,16 +134,16 @@ try {
       if (language === "python") {
         fileName = "main.py";
         harness = `
-import builtins
 import json
+import builtins
 _real_print = print
 def print(*args, **kwargs): pass
 ${code}
 try:
-    result = solve(*${JSON.stringify(t.args)})
-    _real_print("__output:" + str(result))
+    result = solve(*${JSON.stringify(t.args)})
+    _real_print("__output:" + str(result))
 except Exception as e:
-    _real_print("__output:" + str(e))
+    _real_print("__output:" + str(e))
 `;
       }
 
@@ -161,21 +160,15 @@ except Exception as e:
       if (language === "typescript") {
         fileName = "main.ts";
         harness = `
-// Fix 1: Use indexOf(0) instead of startsWith() for broader JS compatibility.
 const realLog = console.log;
-console.log = (msg) => {
-  if (String(msg).indexOf("__output:") === 0) realLog(msg);
-};
-
+console.log = (msg) => { if (String(msg).indexOf("__output:") === 0) realLog(msg); };
 ${code}
-
 try {
-  // Fix 2: Cast the function call to 'any' to bypass strict TypeScript type checking 
-  // about the spread operator on unknown array length.
-  const r = (solve as any)(...${JSON.stringify(t.args)});
-  console.log("__output:" + JSON.stringify(r));
+  const fn = solve;
+  const r = fn(...${JSON.stringify(t.args)});
+  console.log("__output:" + JSON.stringify(r));
 } catch (err) {
-  console.log("__output:" + String(err));
+  console.log("__output:" + String(err));
 }
 `;
       }
@@ -187,16 +180,9 @@ try {
       });
 
       const fullOutput = response.data.run.stdout + response.data.run.stderr;
-
       const match = fullOutput.match(/__output:(.*)/);
 
-      let actual;
-      if (match) {
-        actual = match[1].trim();
-      } else {
-        actual = fullOutput.trim();
-      }
-
+      const actual = match ? match[1].trim() : fullOutput.trim();
       const inputStr = t.args.map((a) => JSON.stringify(a)).join(", ");
 
       results.push({
