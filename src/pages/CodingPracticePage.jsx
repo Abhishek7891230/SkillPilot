@@ -46,9 +46,9 @@ function CustomDropdown({ value, options, onChange, placeholder }) {
           {options.map((o) => (
             <div
               key={o.value}
-              className={`custom-dropdown-item ${
-                o.value === value ? "active" : ""
-              }`}
+              className={`custom-dropdown-item 
+                        ${o.value === value ? "active" : ""} 
+                        ${o.solved ? "solved-item" : ""}`.trim()}
               onClick={() => {
                 onChange(o.value);
                 setOpen(false);
@@ -128,9 +128,8 @@ int main(){
 
   const questionOptions = filtered.map((q, i) => ({
     value: i,
-    label: solvedQuestions.includes(q.id)
-      ? `✔ ${i + 1}. ${q.title}`
-      : `${i + 1}. ${q.title}`,
+    label: `${i + 1}. ${q.title}`,
+    solved: solvedQuestions.includes(q.id),
   }));
 
   const languageOptions = [
@@ -297,7 +296,7 @@ Result: ${r.passed ? "✔ PASS" : "✘ FAIL"}`
               ▶
             </button>
             <button
-              className="submit-btn"
+              className="code-submit-btn"
               disabled={!allPassed || isSolved}
               onClick={handleSubmit}
             >

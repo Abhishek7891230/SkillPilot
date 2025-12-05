@@ -9,9 +9,10 @@
 
 .question-pane {
   background: #ffffff;
-  border-radius: 12px;
-  border: 1px solid #e4e6f0;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  padding-bottom: 10px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -22,16 +23,38 @@
   top: 0;
   z-index: 10;
   background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 12px 16px;
+  border-bottom: 1px solid #eef0f5;
+  padding: 14px 18px;
   display: flex;
+  gap: 12px;
   align-items: center;
-  gap: 10px;
+}
+
+.nav-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: white;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #475569;
+  cursor: pointer;
+  transition: 0.2s ease;
+  min-width: 38px;
+}
+
+.nav-btn:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.nav-btn:active {
+  background: #f3f4f6;
 }
 
 .custom-dropdown {
   position: relative;
-  min-width: 120px;
+  min-width: 140px;
 }
 
 .custom-dropdown-trigger {
@@ -41,149 +64,130 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-
+  gap: 6px;
   background: #ffffff;
   border: 1px solid #d1d5db;
   border-radius: 8px;
-
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 500;
   color: #1e293b;
-  text-align: left;
-
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: 0.2s ease;
 }
 
 .custom-dropdown-trigger:hover {
-  background: #f9fafb;
-  border-color: #9ca3af;
-}
-
-.custom-dropdown-trigger svg {
-  flex-shrink: 0;
-  color: #475569;
+  background: #f3f5fa;
 }
 
 .custom-dropdown-menu {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + 6px);
   left: 0;
   right: 0;
-
   background: #ffffff;
-  border: 1px solid #d1d5db;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-  max-height: 300px;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  max-height: 260px;
   overflow-y: auto;
-  z-index: 100;
+  z-index: 20;
 }
 
 .custom-dropdown-item {
-  padding: 10px 12px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: #1e293b;
+  padding: 10px 14px;
+  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.15s ease;
+  color: #1e293b;
+  transition: 0.15s ease;
 }
 
 .custom-dropdown-item:hover {
-  background: #f3f4f6;
+  background: #eef1f6;
 }
 
 .custom-dropdown-item.active {
   background: #4f46e5;
-  color: #ffffff;
-  font-weight: 600;
-}
-
-.custom-dropdown-item.active:hover {
-  background: #4338ca;
-}
-
-.editor-toolbar .custom-dropdown-trigger {
-  background: #374151;
-  border-color: #4b5563;
-  color: #f9fafb;
-}
-
-.editor-toolbar .custom-dropdown-trigger:hover {
-  background: #4b5563;
-  border-color: #6b7280;
-}
-
-.editor-toolbar .custom-dropdown-trigger svg {
-  color: #f9fafb;
-}
-
-.editor-toolbar .custom-dropdown-menu {
-  background: #374151;
-  border-color: #4b5563;
-}
-
-.editor-toolbar .custom-dropdown-item {
-  color: #f9fafb;
-}
-
-.editor-toolbar .custom-dropdown-item:hover {
-  background: #4b5563;
-}
-
-.editor-toolbar .custom-dropdown-item.active {
-  background: #4f46e5;
-  color: #ffffff;
-}
-
-.editor-toolbar .custom-dropdown-item.active:hover {
-  background: #4338ca;
+  color: white;
 }
 
 .question-body {
-  padding: 18px;
+  padding: 26px 30px;
   overflow-y: auto;
 }
 
 .question-title {
-  font-size: 1.35rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 8px;
+  color: #0f172a;
+  margin-bottom: 16px;
+  letter-spacing: -0.4px;
 }
 
 .tags {
   display: flex;
-  gap: 8px;
-  margin: 8px 0;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.difficulty,
+.topic {
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  border-radius: 8px;
 }
 
 .difficulty {
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  background: #ffe2e2;
   color: #dc2626;
-  background: #fee2e2;
 }
 
 .topic {
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #1d4ed8;
-  background: #dbeafe;
+  background: #e0eaff;
+  color: #2563eb;
+}
+
+.question-body h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-top: 28px;
+  margin-bottom: 10px;
+  color: #0f172a;
+}
+
+.question-body p {
+  font-size: 0.96rem;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 10px;
 }
 
 .sample-box {
-  background: #f8fafc;
+  margin-top: 18px;
+  background: #fafcff;
+  border: 1px solid #e3e7ef;
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+.sample-box strong {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.sample-box pre {
+  background: #f1f5f9;
   padding: 12px;
   border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  margin-top: 12px;
+  font-size: 0.85rem;
+  color: #111827;
+  font-family: "JetBrains Mono", monospace;
+  white-space: pre-wrap;
+  margin-bottom: 8px;
 }
 
 .editor-pane {
@@ -205,7 +209,7 @@
 }
 
 .run-btn,
-.submit-btn {
+.code-submit-btn {
   padding: 8px 16px;
   height: 38px;
   border-radius: 8px;
@@ -213,7 +217,7 @@
   font-weight: 600;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: 0.2s ease;
 }
 
 .run-btn {
@@ -226,24 +230,25 @@
   background: #4b5563;
 }
 
-.submit-btn {
+.code-submit-btn {
   background: #16a34a;
   color: white;
 }
 
-.submit-btn:hover {
+.code-submit-btn:hover {
   background: #15803d;
 }
 
 .editor-fixed {
-  height: 420px;
+  flex: 1;
 }
 
 .output-fixed {
-  background: #f9fafb;
-  padding: 14px 16px;
+  background: #ffffff;
+  padding: 18px 20px;
   border-top: 1px solid #e5e7eb;
   min-height: 260px;
+  flex-shrink: 0;
 }
 
 .output-box {
@@ -259,36 +264,17 @@
   line-height: 1.6;
 }
 
-.nav-btn {
-  padding: 8px 14px;
-  height: 38px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  background: white;
-  font-weight: 600;
-  font-size: 1rem;
-  color: #475569;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 38px;
+.solved-item {
+  color: #16a34a;
 }
-
-.nav-btn:hover {
-  background: #f9fafb;
-  border-color: #9ca3af;
-}
-
-.nav-btn:active {
-  background: #f3f4f6;
+.solved-item.active {
+  background: #16a34a;
+  color: white;
 }
 
 @media (max-width: 1024px) {
   .coding-page {
     grid-template-columns: 1fr;
     padding: 80px 3% 24px;
-  }
-
-  .editor-pane {
-    min-height: 600px;
   }
 }
