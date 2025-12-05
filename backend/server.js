@@ -29,7 +29,6 @@ async function runWithRetry(payload, retries = 3, delay = 300) {
 function buildCppHarness(code, args) {
   const decls = [];
   const callArgs = [];
-
   args.forEach((arg, index) => {
     const name = `arg${index}`;
     if (Array.isArray(arg)) {
@@ -43,7 +42,6 @@ function buildCppHarness(code, args) {
       callArgs.push(name);
     }
   });
-
   return `
 #include <bits/stdc++.h>
 using namespace std;
@@ -54,7 +52,7 @@ ${decls.map((d) => "    " + d).join("\n")}
         auto res = solve(${callArgs.join(",")});
         cout << "__output:" << res;
     } catch (...) {
-        cout << "__output:Error";
+        cout << "__output:Runtime Error";
     }
 }
 `;
@@ -97,7 +95,8 @@ ${decls.map((d) => "            " + d).join("\n")}
             Object result = Solution.solve(${callArgs.join(",")});
             System.out.println("__output:" + String.valueOf(result));
         } catch (Exception e) {
-            System.out.println("__output:Error");
+            // DEBUGGING: Print the actual error message
+            System.out.println("__output:" + e.toString());
         }
     }
 }
@@ -120,17 +119,13 @@ app.post("/judge", async (req, res) => {
         fileName = "main.js";
         harness = `
 const realLog = console.log;
-console.log = (msg) => {
-  if (String(msg).startsWith("__output:")) realLog(msg);
-};
-
+console.log = (msg) => { if (String(msg).startsWith("__output:")) realLog(msg); };
 ${code}
-
 try {
   const r = solve(...${JSON.stringify(t.args)});
   console.log("__output:" + JSON.stringify(r));
 } catch (err) {
-  console.log("__output:Error");
+  console.log("__output:" + err.message);
 }
 `;
       }
@@ -142,14 +137,12 @@ import builtins
 import json
 _real_print = print
 def print(*args, **kwargs): pass
-
 ${code}
-
 try:
     result = solve(*${JSON.stringify(t.args)})
     _real_print("__output:" + str(result))
-except:
-    _real_print("__output:Error")
+except Exception as e:
+    _real_print("__output:" + str(e))
 `;
       }
 
@@ -169,10 +162,16 @@ except:
         files: [{ name: fileName, content: harness }],
       });
 
-      const stdout = response.data.run.stdout + response.data.run.stderr;
+      const fullOutput = response.data.run.stdout + response.data.run.stderr;
 
-      const match = stdout.match(/__output:(.*)/);
-      const actual = match ? match[1].trim() : "Error";
+      const match = fullOutput.match(/__output:(.*)/);
+
+      let actual;
+      if (match) {
+        actual = match[1].trim();
+      } else {
+        actual = fullOutput.trim();
+      }
 
       const inputStr = t.args.map((a) => JSON.stringify(a)).join(", ");
 
@@ -180,14 +179,13 @@ except:
         args: t.args,
         input: inputStr,
         expected: t.expected,
-        actual,
+        actual: actual,
         passed: actual === t.expected,
       });
     }
 
     return res.json({ results });
   } catch (err) {
-    console.error("Judge Error:", err.message);
     return res.status(500).json({ error: "JudgeError", message: err.message });
   }
 });
