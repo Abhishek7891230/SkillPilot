@@ -116,7 +116,7 @@ function buildTSHarness(code, args) {
 ${cleaned}
 try {
   const r = solve(...${JSON.stringify(args)});
-  console.log("__output:" + JSON.stringify(r));
+  console.log("__output:" + String(r));
 } catch (err) {
   console.log("__output:" + String(err));
 }
@@ -139,13 +139,14 @@ app.post("/judge", async (req, res) => {
         fileName = "main.js";
         harness = `
 const realLog = console.log;
-console.log = (msg) => { if (String(msg).indexOf("__output:") === 0) realLog(msg); };
+// swallow user logs so they don't pollute judge output
+console.log = () => {};
 ${code}
 try {
   const r = solve(...${JSON.stringify(t.args)});
-  console.log("__output:" + JSON.stringify(r));
+  realLog("__output:" + String(r));
 } catch (err) {
-  console.log("__output:" + String(err));
+  realLog("__output:" + String(err));
 }
 `;
       }

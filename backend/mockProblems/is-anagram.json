@@ -1,0 +1,9 @@
+{
+  "id": "is-anagram",
+  "title": "Check Anagram",
+  "testCases": [
+    { "args": ["Listen", "Silent"], "expected": "YES" },
+    { "args": ["Hello", "World"], "expected": "NO" },
+    { "args": ["aCt", "CaT"], "expected": "YES" }
+  ]
+}

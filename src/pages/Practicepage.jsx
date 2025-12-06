@@ -21,7 +21,7 @@ export function PracticePage() {
                 <p>Solve problems focused on DSA and sharpen your skills.</p>
               </div>
             </a>
-            <a href="#" className="option-card">
+            <a href="/mocktest/config?mode=coding" className="option-card">
               <i className="fas fa-clipboard-list"></i>
               <div className="option-text">
                 <h3>Take Mock Test→</h3>
@@ -53,7 +53,7 @@ export function PracticePage() {
                 <p>Practice quantitative and logical reasoning.</p>
               </div>
             </a>
-            <a href="#" className="option-card">
+            <a href="/mocktest/config?mode=aptitude" className="option-card">
               <i className="fas fa-clipboard-check"></i>
               <div className="option-text">
                 <h3>Take Mock Test→</h3>

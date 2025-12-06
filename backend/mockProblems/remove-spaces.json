@@ -1,0 +1,9 @@
+{
+  "id": "remove-spaces",
+  "title": "Remove All Spaces",
+  "testCases": [
+    { "args": ["a b  c"], "expected": "abc" },
+    { "args": ["   hello   world   "], "expected": "helloworld" },
+    { "args": ["nospace"], "expected": "nospace" }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "id": "string-toggle-case",
+  "title": "Toggle Case of String",
+  "testCases": [
+    { "args": ["HeLLo"], "expected": "hEllO" },
+    { "args": ["ABCdef"], "expected": "abcDEF" },
+    { "args": ["x"], "expected": "X" }
+  ]
+}

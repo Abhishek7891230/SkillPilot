@@ -1,0 +1,9 @@
+{
+  "id": "sum-until-zero",
+  "title": "Sum Until Zero",
+  "testCases": [
+    { "args": [[3, 5, -2, 0]], "expected": "6" },
+    { "args": [[10, 20, 30, 0]], "expected": "60" },
+    { "args": [[0]], "expected": "0" }
+  ]
+}

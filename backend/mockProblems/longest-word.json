@@ -1,0 +1,9 @@
+{
+  "id": "longest-word",
+  "title": "Longest Word",
+  "testCases": [
+    { "args": ["I love programming"], "expected": "programming" },
+    { "args": ["one three five"], "expected": "three" },
+    { "args": ["hello"], "expected": "hello" }
+  ]
+}

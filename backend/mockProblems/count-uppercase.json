@@ -1,0 +1,9 @@
+{
+  "id": "count-uppercase",
+  "title": "Count Uppercase",
+  "testCases": [
+    { "args": ["HeLLo WorLD"], "expected": "6" },
+    { "args": ["abc"], "expected": "0" },
+    { "args": ["XYZ"], "expected": "3" }
+  ]
+}
