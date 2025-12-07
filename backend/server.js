@@ -5,7 +5,18 @@ import { loadProblem } from "./controller/loadProblem.js";
 
 const app = express();
 
-app.use(cors({ origin: "*", methods: ["GET", "POST"] }));
+// Allow your Netlify domain + localhost for development
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  process.env.FRONTEND_URL || "https://your-netlify-site.netlify.app",
+];
+
+app.use(cors({ 
+  origin: allowedOrigins, 
+  methods: ["GET", "POST"],
+  credentials: true 
+}));
 app.use(express.json());
 
 async function runWithRetry(payload, retries = 3, delay = 300) {

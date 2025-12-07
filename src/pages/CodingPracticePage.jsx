@@ -179,8 +179,9 @@ Result: ${r.passed ? "✔ PASS" : "✘ FAIL"}`
 
   const runCode = async () => {
     setOutput("Running tests...");
+    const apiUrl = import.meta.env.VITE_API_URL || "https://skillpilot-production-8c12.up.railway.app";
     const res = await fetch(
-      "https://skillpilot-production-8c12.up.railway.app/judge",
+      `${apiUrl}/judge`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
