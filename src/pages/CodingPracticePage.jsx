@@ -179,15 +179,14 @@ Result: ${r.passed ? "✔ PASS" : "✘ FAIL"}`
 
   const runCode = async () => {
     setOutput("Running tests...");
-    const apiUrl = import.meta.env.VITE_API_URL || "https://skillpilot-production-8c12.up.railway.app";
-    const res = await fetch(
-      `${apiUrl}/judge`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ language, code, questionId: current.id }),
-      }
-    );
+    const apiUrl =
+      import.meta.env.VITE_API_URL ||
+      "https://skillpilot-production-8c12.up.railway.app";
+    const res = await fetch(`${apiUrl}/judge`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ language, code, questionId: current.id }),
+    });
     const data = await res.json();
     if (!Array.isArray(data.results)) {
       setOutput("Judge Error");
