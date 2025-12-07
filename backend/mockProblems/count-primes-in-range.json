@@ -1,0 +1,10 @@
+{
+  "id": "count-primes-in-range",
+  "title": "Count Primes in Range",
+  "testCases": [
+    { "args": [10, 20], "expected": "4" },
+    { "args": [1, 10], "expected": "4" },
+    { "args": [20, 30], "expected": "2" }
+  ]
+}
+

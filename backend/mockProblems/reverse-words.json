@@ -1,0 +1,10 @@
+{
+  "id": "reverse-words",
+  "title": "Reverse Words in String",
+  "testCases": [
+    { "args": ["hello world from code"], "expected": "code from world hello" },
+    { "args": ["single"], "expected": "single" },
+    { "args": ["a b c"], "expected": "c b a" }
+  ]
+}
+

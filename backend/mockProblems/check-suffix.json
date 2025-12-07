@@ -1,0 +1,10 @@
+{
+  "id": "check-suffix",
+  "title": "Check Suffix",
+  "testCases": [
+    { "args": ["programming", "ing"], "expected": "YES" },
+    { "args": ["hello", "lo"], "expected": "YES" },
+    { "args": ["test", "xyz"], "expected": "NO" }
+  ]
+}
+

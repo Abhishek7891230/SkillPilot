@@ -1,0 +1,10 @@
+{
+  "id": "find-power",
+  "title": "Calculate Power",
+  "testCases": [
+    { "args": [2, 10], "expected": "1024" },
+    { "args": [3, 3], "expected": "27" },
+    { "args": [5, 0], "expected": "1" }
+  ]
+}
+

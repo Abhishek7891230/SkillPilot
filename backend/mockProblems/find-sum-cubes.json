@@ -1,0 +1,10 @@
+{
+  "id": "find-sum-cubes",
+  "title": "Sum of Cubes",
+  "testCases": [
+    { "args": [3], "expected": "36" },
+    { "args": [2], "expected": "9" },
+    { "args": [1], "expected": "1" }
+  ]
+}
+

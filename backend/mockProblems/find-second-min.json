@@ -1,0 +1,10 @@
+{
+  "id": "find-second-min",
+  "title": "Find Second Minimum",
+  "testCases": [
+    { "args": [[1, 5, 3, 2, 4]], "expected": "2" },
+    { "args": [[10, 20, 30]], "expected": "20" },
+    { "args": [[5, 5, 5]], "expected": "5" }
+  ]
+}
+

@@ -1,0 +1,10 @@
+{
+  "id": "check-armstrong",
+  "title": "Check Armstrong Number",
+  "testCases": [
+    { "args": [153], "expected": "YES" },
+    { "args": [123], "expected": "NO" },
+    { "args": [371], "expected": "YES" }
+  ]
+}
+

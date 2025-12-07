@@ -1,0 +1,10 @@
+{
+  "id": "sum-digits",
+  "title": "Sum of Digits",
+  "testCases": [
+    { "args": [12345], "expected": "15" },
+    { "args": [999], "expected": "27" },
+    { "args": [0], "expected": "0" }
+  ]
+}
+

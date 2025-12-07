@@ -1,0 +1,10 @@
+{
+  "id": "find-area-circle",
+  "title": "Find Area of Circle",
+  "testCases": [
+    { "args": [5], "expected": "78.54" },
+    { "args": [1], "expected": "3.14" },
+    { "args": [10], "expected": "314.16" }
+  ]
+}
+

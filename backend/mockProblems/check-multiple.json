@@ -1,0 +1,10 @@
+{
+  "id": "check-multiple",
+  "title": "Check if Multiple",
+  "testCases": [
+    { "args": [12, 4], "expected": "YES" },
+    { "args": [12, 5], "expected": "NO" },
+    { "args": [0, 5], "expected": "YES" }
+  ]
+}
+

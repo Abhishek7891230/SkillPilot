@@ -1,0 +1,10 @@
+{
+  "id": "extract-substring",
+  "title": "Extract Substring",
+  "testCases": [
+    { "args": ["programming", 3, 4], "expected": "gram" },
+    { "args": ["hello", 0, 2], "expected": "he" },
+    { "args": ["test", 1, 2], "expected": "es" }
+  ]
+}
+

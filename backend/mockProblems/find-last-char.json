@@ -1,0 +1,10 @@
+{
+  "id": "find-last-char",
+  "title": "Find Last Character",
+  "testCases": [
+    { "args": ["Hello"], "expected": "o" },
+    { "args": ["A"], "expected": "A" },
+    { "args": ["test "], "expected": " " }
+  ]
+}
+

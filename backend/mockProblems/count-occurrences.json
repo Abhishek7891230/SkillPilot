@@ -1,0 +1,10 @@
+{
+  "id": "count-occurrences",
+  "title": "Count Character Occurrences",
+  "testCases": [
+    { "args": ["programming", "g"], "expected": "2" },
+    { "args": ["hello", "l"], "expected": "2" },
+    { "args": ["test", "x"], "expected": "0" }
+  ]
+}
+

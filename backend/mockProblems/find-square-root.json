@@ -1,0 +1,10 @@
+{
+  "id": "find-square-root",
+  "title": "Find Square Root",
+  "testCases": [
+    { "args": [16], "expected": "4" },
+    { "args": [15], "expected": "3" },
+    { "args": [1], "expected": "1" }
+  ]
+}
+

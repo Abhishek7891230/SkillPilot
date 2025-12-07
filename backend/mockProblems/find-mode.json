@@ -1,0 +1,10 @@
+{
+  "id": "find-mode",
+  "title": "Find Mode of Array",
+  "testCases": [
+    { "args": [[1, 2, 2, 3, 2]], "expected": "2" },
+    { "args": [[1, 1, 2, 2, 3]], "expected": "1" },
+    { "args": [[5, 5, 5]], "expected": "5" }
+  ]
+}
+

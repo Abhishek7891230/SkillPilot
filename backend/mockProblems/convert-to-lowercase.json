@@ -1,0 +1,10 @@
+{
+  "id": "convert-to-lowercase",
+  "title": "Convert to Lowercase",
+  "testCases": [
+    { "args": ["HeLLo WoRLd"], "expected": "hello world" },
+    { "args": ["ALLUPPER"], "expected": "allupper" },
+    { "args": ["alllower"], "expected": "alllower" }
+  ]
+}
+

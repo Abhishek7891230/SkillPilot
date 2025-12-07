@@ -1,0 +1,10 @@
+{
+  "id": "check-binary-string",
+  "title": "Check Binary String",
+  "testCases": [
+    { "args": ["101010"], "expected": "YES" },
+    { "args": ["1012"], "expected": "NO" },
+    { "args": ["000111"], "expected": "YES" }
+  ]
+}
+

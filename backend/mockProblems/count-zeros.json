@@ -1,0 +1,10 @@
+{
+  "id": "count-zeros",
+  "title": "Count Zeros in Array",
+  "testCases": [
+    { "args": [[0, 1, 0, 2, 0]], "expected": "3" },
+    { "args": [[1, 2, 3]], "expected": "0" },
+    { "args": [[0, 0, 0]], "expected": "3" }
+  ]
+}
+

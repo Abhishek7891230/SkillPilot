@@ -1,0 +1,10 @@
+{
+  "id": "check-prime-factor",
+  "title": "Check Prime Factorization",
+  "testCases": [
+    { "args": [12], "expected": "2 2 3" },
+    { "args": [7], "expected": "7" },
+    { "args": [20], "expected": "2 2 5" }
+  ]
+}
+

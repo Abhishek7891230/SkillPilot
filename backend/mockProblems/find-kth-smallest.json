@@ -1,0 +1,10 @@
+{
+  "id": "find-kth-smallest",
+  "title": "Find Kth Smallest Element",
+  "testCases": [
+    { "args": [[3, 1, 4, 1, 5], 2], "expected": "1" },
+    { "args": [[5, 2, 8, 1], 1], "expected": "1" },
+    { "args": [[1, 2, 3], 3], "expected": "3" }
+  ]
+}
+

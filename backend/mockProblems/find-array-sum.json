@@ -1,0 +1,10 @@
+{
+  "id": "find-array-sum",
+  "title": "Sum of Array Elements",
+  "testCases": [
+    { "args": [[1, 2, 3, 4, 5]], "expected": "15" },
+    { "args": [[10, 20, 30]], "expected": "60" },
+    { "args": [[0]], "expected": "0" }
+  ]
+}
+

@@ -1,0 +1,10 @@
+{
+  "id": "find-char-position",
+  "title": "Find Character Position",
+  "testCases": [
+    { "args": ["programming", "g"], "expected": "3" },
+    { "args": ["hello", "e"], "expected": "1" },
+    { "args": ["test", "x"], "expected": "-1" }
+  ]
+}
+

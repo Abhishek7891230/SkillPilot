@@ -1,0 +1,10 @@
+{
+  "id": "find-missing-letters",
+  "title": "Find Missing Letters",
+  "testCases": [
+    { "args": ["The quick brown fox"], "expected": "dgjlpsuvwyz" },
+    { "args": ["abcdefghijklmnopqrstuvwxyz"], "expected": "" },
+    { "args": ["hello"], "expected": "abcdfgijkmnpqrstuvwxyz" }
+  ]
+}
+

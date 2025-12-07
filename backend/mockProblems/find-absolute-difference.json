@@ -1,0 +1,10 @@
+{
+  "id": "find-absolute-difference",
+  "title": "Find Absolute Difference",
+  "testCases": [
+    { "args": [5, 10], "expected": "5" },
+    { "args": [10, 5], "expected": "5" },
+    { "args": [5, 5], "expected": "0" }
+  ]
+}
+

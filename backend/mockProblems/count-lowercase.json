@@ -1,0 +1,10 @@
+{
+  "id": "count-lowercase",
+  "title": "Count Lowercase Letters",
+  "testCases": [
+    { "args": ["HeLLo WorLD"], "expected": "4" },
+    { "args": ["ALLUPPER"], "expected": "0" },
+    { "args": ["alllower"], "expected": "8" }
+  ]
+}
+

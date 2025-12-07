@@ -1,0 +1,10 @@
+{
+  "id": "count-consonants",
+  "title": "Count Consonants",
+  "testCases": [
+    { "args": ["Hello World"], "expected": "7" },
+    { "args": ["aeiou"], "expected": "0" },
+    { "args": ["bcdfg"], "expected": "5" }
+  ]
+}
+

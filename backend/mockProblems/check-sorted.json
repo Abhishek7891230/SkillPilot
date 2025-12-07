@@ -1,0 +1,10 @@
+{
+  "id": "check-sorted",
+  "title": "Check if Array is Sorted",
+  "testCases": [
+    { "args": [[1, 2, 3, 4, 5]], "expected": "YES" },
+    { "args": [[1, 3, 2, 4, 5]], "expected": "NO" },
+    { "args": [[5, 4, 3, 2, 1]], "expected": "NO" }
+  ]
+}
+

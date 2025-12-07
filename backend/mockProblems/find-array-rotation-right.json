@@ -1,0 +1,10 @@
+{
+  "id": "find-array-rotation-right",
+  "title": "Rotate Array Right",
+  "testCases": [
+    { "args": [[1, 2, 3, 4, 5], 2], "expected": "4 5 1 2 3" },
+    { "args": [[1, 2, 3], 1], "expected": "3 1 2" },
+    { "args": [[1], 1], "expected": "1" }
+  ]
+}
+

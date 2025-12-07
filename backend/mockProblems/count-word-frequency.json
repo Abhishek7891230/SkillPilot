@@ -1,0 +1,10 @@
+{
+  "id": "count-word-frequency",
+  "title": "Count Word Frequency",
+  "testCases": [
+    { "args": ["hello world hello", "hello"], "expected": "2" },
+    { "args": ["test test", "test"], "expected": "2" },
+    { "args": ["hello world", "xyz"], "expected": "0" }
+  ]
+}
+

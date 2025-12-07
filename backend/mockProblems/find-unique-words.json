@@ -1,0 +1,10 @@
+{
+  "id": "find-unique-words",
+  "title": "Find Unique Words",
+  "testCases": [
+    { "args": ["hello world hello"], "expected": "hello world" },
+    { "args": ["a b c"], "expected": "a b c" },
+    { "args": ["test test test"], "expected": "test" }
+  ]
+}
+

@@ -1,0 +1,10 @@
+{
+  "id": "swap-without-temp",
+  "title": "Swap Two Numbers",
+  "testCases": [
+    { "args": [5, 10], "expected": "10 5" },
+    { "args": [1, 2], "expected": "2 1" },
+    { "args": [0, 0], "expected": "0 0" }
+  ]
+}
+

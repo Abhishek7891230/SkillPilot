@@ -1,0 +1,10 @@
+{
+  "id": "count-characters",
+  "title": "Count Characters in String",
+  "testCases": [
+    { "args": ["Hello World"], "expected": "10" },
+    { "args": ["   "], "expected": "0" },
+    { "args": ["abc"], "expected": "3" }
+  ]
+}
+

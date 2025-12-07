@@ -1,0 +1,10 @@
+{
+  "id": "count-digits-recursive",
+  "title": "Count Digits Recursively",
+  "testCases": [
+    { "args": [12345], "expected": "5" },
+    { "args": [0], "expected": "1" },
+    { "args": [999], "expected": "3" }
+  ]
+}
+

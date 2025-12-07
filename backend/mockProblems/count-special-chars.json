@@ -1,0 +1,10 @@
+{
+  "id": "count-special-chars",
+  "title": "Count Special Characters",
+  "testCases": [
+    { "args": ["Hello@World#123"], "expected": "2" },
+    { "args": ["HelloWorld"], "expected": "0" },
+    { "args": ["!@#$%"], "expected": "5" }
+  ]
+}
+

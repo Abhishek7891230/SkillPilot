@@ -1,0 +1,10 @@
+{
+  "id": "find-day-of-week",
+  "title": "Find Day of Week",
+  "testCases": [
+    { "args": [1, 1, 2024], "expected": "Monday" },
+    { "args": [15, 3, 2024], "expected": "Friday" },
+    { "args": [25, 12, 2023], "expected": "Monday" }
+  ]
+}
+

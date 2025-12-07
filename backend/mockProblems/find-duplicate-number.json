@@ -1,0 +1,10 @@
+{
+  "id": "find-duplicate-number",
+  "title": "Find Duplicate Number",
+  "testCases": [
+    { "args": [4, [1, 2, 3, 2, 4]], "expected": "2" },
+    { "args": [3, [1, 1, 2]], "expected": "1" },
+    { "args": [2, [1, 1]], "expected": "1" }
+  ]
+}
+

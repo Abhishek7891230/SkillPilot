@@ -1,0 +1,10 @@
+{
+  "id": "find-binary-sum",
+  "title": "Sum of Binary Strings",
+  "testCases": [
+    { "args": ["11", "1"], "expected": "100" },
+    { "args": ["1010", "1011"], "expected": "10101" },
+    { "args": ["0", "0"], "expected": "0" }
+  ]
+}
+

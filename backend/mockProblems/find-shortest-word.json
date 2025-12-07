@@ -1,0 +1,10 @@
+{
+  "id": "find-shortest-word",
+  "title": "Find Shortest Word",
+  "testCases": [
+    { "args": ["I love programming"], "expected": "I" },
+    { "args": ["hello world"], "expected": "hello" },
+    { "args": ["a"], "expected": "a" }
+  ]
+}
+

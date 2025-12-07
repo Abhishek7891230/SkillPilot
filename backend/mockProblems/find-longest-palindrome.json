@@ -1,0 +1,10 @@
+{
+  "id": "find-longest-palindrome",
+  "title": "Find Longest Palindrome Substring",
+  "testCases": [
+    { "args": ["babad"], "expected": "3" },
+    { "args": ["cbbd"], "expected": "2" },
+    { "args": ["a"], "expected": "1" }
+  ]
+}
+

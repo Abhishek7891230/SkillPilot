@@ -1,0 +1,10 @@
+{
+  "id": "check-pangram",
+  "title": "Check Pangram",
+  "testCases": [
+    { "args": ["The quick brown fox jumps over the lazy dog"], "expected": "YES" },
+    { "args": ["Hello World"], "expected": "NO" },
+    { "args": ["abcdefghijklmnopqrstuvwxyz"], "expected": "YES" }
+  ]
+}
+

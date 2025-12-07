@@ -1,0 +1,10 @@
+{
+  "id": "convert-to-uppercase",
+  "title": "Convert to Uppercase",
+  "testCases": [
+    { "args": ["HeLLo WoRLd"], "expected": "HELLO WORLD" },
+    { "args": ["alllower"], "expected": "ALLLOWER" },
+    { "args": ["ALLUPPER"], "expected": "ALLUPPER" }
+  ]
+}
+

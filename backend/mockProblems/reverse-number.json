@@ -1,0 +1,10 @@
+{
+  "id": "reverse-number",
+  "title": "Reverse a Number",
+  "testCases": [
+    { "args": [12345], "expected": "54321" },
+    { "args": [100], "expected": "1" },
+    { "args": [0], "expected": "0" }
+  ]
+}
+

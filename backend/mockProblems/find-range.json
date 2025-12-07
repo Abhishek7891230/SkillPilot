@@ -1,0 +1,10 @@
+{
+  "id": "find-range",
+  "title": "Find Range of Array",
+  "testCases": [
+    { "args": [[1, 5, 3, 2, 4]], "expected": "4" },
+    { "args": [[10, 20, 30]], "expected": "20" },
+    { "args": [[5]], "expected": "0" }
+  ]
+}
+

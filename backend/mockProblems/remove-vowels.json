@@ -1,0 +1,10 @@
+{
+  "id": "remove-vowels",
+  "title": "Remove Vowels from String",
+  "testCases": [
+    { "args": ["Hello World"], "expected": "Hll Wrld" },
+    { "args": ["aeiou"], "expected": "" },
+    { "args": ["bcdfg"], "expected": "bcdfg" }
+  ]
+}
+

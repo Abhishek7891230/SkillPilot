@@ -1,0 +1,10 @@
+{
+  "id": "check-leap-year",
+  "title": "Check Leap Year",
+  "testCases": [
+    { "args": [2024], "expected": "YES" },
+    { "args": [2023], "expected": "NO" },
+    { "args": [2000], "expected": "YES" }
+  ]
+}
+

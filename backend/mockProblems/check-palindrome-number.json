@@ -1,0 +1,10 @@
+{
+  "id": "check-palindrome-number",
+  "title": "Check Palindrome Number",
+  "testCases": [
+    { "args": [121], "expected": "YES" },
+    { "args": [123], "expected": "NO" },
+    { "args": [1221], "expected": "YES" }
+  ]
+}
+

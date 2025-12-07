@@ -1,0 +1,10 @@
+{
+  "id": "sort-words",
+  "title": "Sort Words Alphabetically",
+  "testCases": [
+    { "args": ["hello world from code"], "expected": "code from hello world" },
+    { "args": ["zebra apple"], "expected": "apple zebra" },
+    { "args": ["single"], "expected": "single" }
+  ]
+}
+

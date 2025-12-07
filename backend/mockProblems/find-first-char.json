@@ -1,0 +1,10 @@
+{
+  "id": "find-first-char",
+  "title": "Find First Character",
+  "testCases": [
+    { "args": ["Hello"], "expected": "H" },
+    { "args": ["A"], "expected": "A" },
+    { "args": ["  space"], "expected": " " }
+  ]
+}
+

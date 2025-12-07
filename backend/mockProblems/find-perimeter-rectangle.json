@@ -1,0 +1,10 @@
+{
+  "id": "find-perimeter-rectangle",
+  "title": "Find Perimeter of Rectangle",
+  "testCases": [
+    { "args": [5, 3], "expected": "16" },
+    { "args": [10, 10], "expected": "40" },
+    { "args": [1, 1], "expected": "4" }
+  ]
+}
+

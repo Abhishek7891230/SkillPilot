@@ -1,0 +1,10 @@
+{
+  "id": "find-sum-squares",
+  "title": "Sum of Squares",
+  "testCases": [
+    { "args": [5], "expected": "55" },
+    { "args": [3], "expected": "14" },
+    { "args": [1], "expected": "1" }
+  ]
+}
+

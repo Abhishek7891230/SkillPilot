@@ -1,0 +1,10 @@
+{
+  "id": "find-even-odd-count",
+  "title": "Count Even and Odd Numbers",
+  "testCases": [
+    { "args": [[1, 2, 3, 4, 5]], "expected": "2 3" },
+    { "args": [[2, 4, 6]], "expected": "3 0" },
+    { "args": [[1, 3, 5]], "expected": "0 3" }
+  ]
+}
+

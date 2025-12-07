@@ -1,0 +1,10 @@
+{
+  "id": "sum-diagonal",
+  "title": "Sum of Diagonal Elements",
+  "testCases": [
+    { "args": [[[1, 2, 3], [4, 5, 6], [7, 8, 9]]], "expected": "15" },
+    { "args": [[[1, 2], [3, 4]]], "expected": "5" },
+    { "args": [[[10]]], "expected": "10" }
+  ]
+}
+

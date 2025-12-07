@@ -1,0 +1,10 @@
+{
+  "id": "remove-duplicates-string",
+  "title": "Remove Duplicate Characters",
+  "testCases": [
+    { "args": ["programming"], "expected": "progamin" },
+    { "args": ["hello"], "expected": "helo" },
+    { "args": ["abc"], "expected": "abc" }
+  ]
+}
+

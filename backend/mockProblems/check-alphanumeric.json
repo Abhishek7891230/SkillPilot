@@ -1,0 +1,10 @@
+{
+  "id": "check-alphanumeric",
+  "title": "Check Alphanumeric",
+  "testCases": [
+    { "args": ["Hello123"], "expected": "YES" },
+    { "args": ["Hello@123"], "expected": "NO" },
+    { "args": ["123"], "expected": "YES" }
+  ]
+}
+

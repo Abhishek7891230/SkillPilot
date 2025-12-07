@@ -1,0 +1,10 @@
+{
+  "id": "find-pairs-sum",
+  "title": "Find Pairs with Given Sum",
+  "testCases": [
+    { "args": [[1, 2, 3, 4, 5], 5], "expected": "2" },
+    { "args": [[1, 1, 1], 2], "expected": "3" },
+    { "args": [[1, 2, 3], 10], "expected": "0" }
+  ]
+}
+

@@ -1,0 +1,10 @@
+{
+  "id": "find-perfect-number",
+  "title": "Check Perfect Number",
+  "testCases": [
+    { "args": [6], "expected": "YES" },
+    { "args": [28], "expected": "YES" },
+    { "args": [10], "expected": "NO" }
+  ]
+}
+

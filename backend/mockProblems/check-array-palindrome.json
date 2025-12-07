@@ -1,0 +1,10 @@
+{
+  "id": "check-array-palindrome",
+  "title": "Check if Array is Palindrome",
+  "testCases": [
+    { "args": [[1, 2, 3, 2, 1]], "expected": "YES" },
+    { "args": [[1, 2, 3, 4, 5]], "expected": "NO" },
+    { "args": [[1]], "expected": "YES" }
+  ]
+}
+

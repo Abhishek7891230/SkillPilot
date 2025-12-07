@@ -1,0 +1,10 @@
+{
+  "id": "remove-leading-zeros",
+  "title": "Remove Leading Zeros",
+  "testCases": [
+    { "args": ["00012345"], "expected": "12345" },
+    { "args": ["0000"], "expected": "0" },
+    { "args": ["123"], "expected": "123" }
+  ]
+}
+

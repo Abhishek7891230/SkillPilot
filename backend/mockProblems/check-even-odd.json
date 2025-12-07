@@ -1,0 +1,10 @@
+{
+  "id": "check-even-odd",
+  "title": "Check Even or Odd",
+  "testCases": [
+    { "args": [4], "expected": "EVEN" },
+    { "args": [7], "expected": "ODD" },
+    { "args": [0], "expected": "EVEN" }
+  ]
+}
+

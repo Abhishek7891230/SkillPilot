@@ -1,0 +1,10 @@
+{
+  "id": "check-substring",
+  "title": "Check if Substring Exists",
+  "testCases": [
+    { "args": ["programming", "ram"], "expected": "YES" },
+    { "args": ["hello", "xyz"], "expected": "NO" },
+    { "args": ["test", "test"], "expected": "YES" }
+  ]
+}
+

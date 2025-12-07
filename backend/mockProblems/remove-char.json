@@ -1,0 +1,10 @@
+{
+  "id": "remove-char",
+  "title": "Remove Character",
+  "testCases": [
+    { "args": ["programming", "g"], "expected": "prorammin" },
+    { "args": ["hello", "l"], "expected": "heo" },
+    { "args": ["test", "x"], "expected": "test" }
+  ]
+}
+

@@ -1,0 +1,10 @@
+{
+  "id": "check-perfect-square",
+  "title": "Check Perfect Square",
+  "testCases": [
+    { "args": [16], "expected": "YES" },
+    { "args": [15], "expected": "NO" },
+    { "args": [1], "expected": "YES" }
+  ]
+}
+

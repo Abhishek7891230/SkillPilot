@@ -1,0 +1,10 @@
+{
+  "id": "count-words",
+  "title": "Count Words in String",
+  "testCases": [
+    { "args": ["Hello world from code"], "expected": "4" },
+    { "args": ["Single"], "expected": "1" },
+    { "args": ["  multiple   spaces  "], "expected": "2" }
+  ]
+}
+

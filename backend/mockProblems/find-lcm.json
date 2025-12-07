@@ -1,0 +1,10 @@
+{
+  "id": "find-lcm",
+  "title": "Find LCM of Two Numbers",
+  "testCases": [
+    { "args": [12, 8], "expected": "24" },
+    { "args": [5, 7], "expected": "35" },
+    { "args": [4, 6], "expected": "12" }
+  ]
+}
+

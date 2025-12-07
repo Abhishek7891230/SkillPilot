@@ -1,0 +1,10 @@
+{
+  "id": "find-average",
+  "title": "Find Average of Array",
+  "testCases": [
+    { "args": [[1, 2, 3, 4, 5]], "expected": "3.00" },
+    { "args": [[10, 20, 30]], "expected": "20.00" },
+    { "args": [[5]], "expected": "5.00" }
+  ]
+}
+

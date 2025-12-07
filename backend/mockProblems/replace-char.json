@@ -1,0 +1,10 @@
+{
+  "id": "replace-char",
+  "title": "Replace Character",
+  "testCases": [
+    { "args": ["hello", "l", "x"], "expected": "hexxo" },
+    { "args": ["test", "t", "T"], "expected": "TesT" },
+    { "args": ["abc", "x", "y"], "expected": "abc" }
+  ]
+}
+

@@ -1,0 +1,10 @@
+{
+  "id": "find-array-product",
+  "title": "Product of Array Elements",
+  "testCases": [
+    { "args": [[2, 3, 4, 5]], "expected": "120" },
+    { "args": [[1, 2, 3]], "expected": "6" },
+    { "args": [[5]], "expected": "5" }
+  ]
+}
+

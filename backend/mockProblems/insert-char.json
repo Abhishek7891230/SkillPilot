@@ -1,0 +1,10 @@
+{
+  "id": "insert-char",
+  "title": "Insert Character at Position",
+  "testCases": [
+    { "args": ["hello", "X", 2], "expected": "heXllo" },
+    { "args": ["test", "A", 0], "expected": "Atest" },
+    { "args": ["abc", "Z", 3], "expected": "abcZ" }
+  ]
+}
+

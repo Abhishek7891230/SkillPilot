@@ -1,0 +1,10 @@
+{
+  "id": "capitalize-first",
+  "title": "Capitalize First Letter",
+  "testCases": [
+    { "args": ["hello world"], "expected": "Hello World" },
+    { "args": ["single"], "expected": "Single" },
+    { "args": ["  multiple   spaces  "], "expected": "  Multiple   Spaces  " }
+  ]
+}
+
