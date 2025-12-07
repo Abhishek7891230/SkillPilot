@@ -37,7 +37,7 @@ function GaugeChart({ value, total, label, gradientId }) {
       </svg>
       <div className="light-center">
         <span className="light-total">{value}</span>
-        {total > 0 && <span className="light-sub">/{total}</span>}
+        <span className="light-sub">%</span>
         <div className="light-label">{label}</div>
       </div>
     </div>
@@ -47,23 +47,19 @@ function GaugeChart({ value, total, label, gradientId }) {
 function calculateStats(allQuestions, solvedIds) {
   const solved = allQuestions.filter((q) => solvedIds.includes(q.id));
 
-  const byDifficulty = {
-    easy: solved.filter((q) => q.difficulty === "easy").length,
-    medium: solved.filter((q) => q.difficulty === "medium").length,
-    hard: solved.filter((q) => q.difficulty === "hard").length,
-  };
-
-  const totalByDifficulty = {
-    easy: allQuestions.filter((q) => q.difficulty === "easy").length,
-    medium: allQuestions.filter((q) => q.difficulty === "medium").length,
-    hard: allQuestions.filter((q) => q.difficulty === "hard").length,
-  };
-
   return {
     total: solved.length,
     totalQuestions: allQuestions.length,
-    byDifficulty,
-    totalByDifficulty,
+    byDifficulty: {
+      easy: solved.filter((q) => q.difficulty === "easy").length,
+      medium: solved.filter((q) => q.difficulty === "medium").length,
+      hard: solved.filter((q) => q.difficulty === "hard").length,
+    },
+    totalByDifficulty: {
+      easy: allQuestions.filter((q) => q.difficulty === "easy").length,
+      medium: allQuestions.filter((q) => q.difficulty === "medium").length,
+      hard: allQuestions.filter((q) => q.difficulty === "hard").length,
+    },
   };
 }
 
@@ -88,31 +84,51 @@ function calculateStreaks(dailyActivity, last30Days) {
 }
 
 function getLast30Days() {
-  const days = [];
+  const arr = [];
   const today = new Date();
+
   for (let i = 29; i >= 0; i--) {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
-    days.push(d.toISOString().split("T")[0]);
+    arr.push(d.toISOString().split("T")[0]);
   }
-  return days;
+
+  return arr;
 }
 
 export function Dashboard() {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [dataLoading, setDataLoading] = useState(true);
+
   const [aptSolvedIds, setAptSolvedIds] = useState([]);
   const [codingSolvedIds, setCodingSolvedIds] = useState([]);
   const [dailyActivity, setDailyActivity] = useState({});
 
+  const [codingMock, setCodingMock] = useState({
+    testsTaken: 0,
+    bestScore: 0,
+    avgScore: 0,
+    preferredLanguage: "-",
+    lastTests: [],
+  });
+
+  const [aptMock, setAptMock] = useState({
+    testsTaken: 0,
+    bestScore: 0,
+    avgScore: 0,
+    lastTests: [],
+  });
+
+  const [openCodingInsights, setOpenCodingInsights] = useState(false);
+  const [openAptInsights, setOpenAptInsights] = useState(false);
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setUser(u);
       setAuthLoading(false);
     });
-
-    return () => unsubscribe();
+    return () => unsub();
   }, []);
 
   useEffect(() => {
@@ -126,34 +142,38 @@ export function Dashboard() {
       setDataLoading(true);
 
       try {
-        const aptSolvedRef = doc(db, "users", user.uid, "aptitude", "solved");
-        const aptSolvedSnap = await getDoc(aptSolvedRef);
-        setAptSolvedIds(
-          aptSolvedSnap.exists()
-            ? aptSolvedSnap.data().solvedQuestions || []
-            : []
+        const apt = await getDoc(
+          doc(db, "users", user.uid, "aptitude", "solved")
         );
+        setAptSolvedIds(apt.exists() ? apt.data().solvedQuestions || [] : []);
 
-        const codingSolvedRef = doc(db, "users", user.uid, "coding", "solved");
-        const codingSolvedSnap = await getDoc(codingSolvedRef);
+        const cod = await getDoc(
+          doc(db, "users", user.uid, "coding", "solved")
+        );
         setCodingSolvedIds(
-          codingSolvedSnap.exists()
-            ? codingSolvedSnap.data().solvedQuestions || []
-            : []
+          cod.exists() ? cod.data().solvedQuestions || [] : []
         );
 
-        const activityRef = collection(db, "users", user.uid, "dailyActivity");
-        const activitySnap = await getDocs(activityRef);
-        const activityMap = {};
-        activitySnap.forEach((d) => {
-          activityMap[d.id] = d.data().solved || 0;
+        const cm = await getDoc(
+          doc(db, "users", user.uid, "mockTests", "coding")
+        );
+        if (cm.exists()) setCodingMock(cm.data());
+
+        const am = await getDoc(
+          doc(db, "users", user.uid, "mockTests", "aptitude")
+        );
+        if (am.exists()) setAptMock(am.data());
+
+        const actSnap = await getDocs(
+          collection(db, "users", user.uid, "dailyActivity")
+        );
+        const map = {};
+        actSnap.forEach((d) => {
+          map[d.id] = d.data().solved || 0;
         });
-        setDailyActivity(activityMap);
+        setDailyActivity(map);
       } catch (err) {
-        console.error("Error fetching dashboard data:", err);
-        setAptSolvedIds([]);
-        setCodingSolvedIds([]);
-        setDailyActivity({});
+        console.error("Dashboard load failed:", err);
       } finally {
         setDataLoading(false);
       }
@@ -179,13 +199,6 @@ export function Dashboard() {
     [dailyActivity, last30Days]
   );
 
-  const getStreakClass = (count) => {
-    if (count <= 0) return "";
-    if (count < 5) return "streak-low";
-    if (count < 10) return "streak-mid";
-    return "streak-high";
-  };
-
   const totalSolved = aptStats.total + codingStats.total;
 
   if (authLoading || dataLoading) {
@@ -193,7 +206,7 @@ export function Dashboard() {
       <>
         <Navbar />
         <div className="loading-container">
-          <div className="loader" />
+          <div className="loader"></div>
           <div className="loading-text">Loading Dashboard...</div>
         </div>
         <Footer />
@@ -206,9 +219,7 @@ export function Dashboard() {
       <>
         <Navbar />
         <div className="loading-container">
-          <div className="loading-text">
-            Please log in to view your dashboard
-          </div>
+          <div className="loading-text">Please log in to view Dashboard</div>
         </div>
         <Footer />
       </>
@@ -231,8 +242,9 @@ export function Dashboard() {
                 alt="profile"
               />
             </div>
+
             <h3 className="profile-name">{user.displayName || "User"}</h3>
-            <p className="profile-email">{user.email || "No email"}</p>
+            <p className="profile-email">{user.email}</p>
 
             <button className="edit-profile-btn">Edit Profile</button>
 
@@ -262,6 +274,7 @@ export function Dashboard() {
                     gradientId="codingGradient"
                   />
                 </div>
+
                 <div className="card-right">
                   <div className="difficulty-column">
                     <div className="difficulty-box easy">
@@ -271,6 +284,7 @@ export function Dashboard() {
                         {codingStats.totalByDifficulty.easy}
                       </strong>
                     </div>
+
                     <div className="difficulty-box medium">
                       <span>Med</span>
                       <strong>
@@ -278,6 +292,7 @@ export function Dashboard() {
                         {codingStats.totalByDifficulty.medium}
                       </strong>
                     </div>
+
                     <div className="difficulty-box hard">
                       <span>Hard</span>
                       <strong>
@@ -310,6 +325,7 @@ export function Dashboard() {
                         {aptStats.totalByDifficulty.easy}
                       </strong>
                     </div>
+
                     <div className="difficulty-box medium">
                       <span>Med</span>
                       <strong>
@@ -317,6 +333,7 @@ export function Dashboard() {
                         {aptStats.totalByDifficulty.medium}
                       </strong>
                     </div>
+
                     <div className="difficulty-box hard">
                       <span>Hard</span>
                       <strong>
@@ -334,25 +351,34 @@ export function Dashboard() {
               <div className="card-body">
                 <div className="card-left">
                   <GaugeChart
-                    value={0}
-                    total={0}
-                    label="Success rate"
+                    value={codingMock.avgScore}
+                    total={100}
+                    label="Avg score"
                     gradientId="codingMockGradient"
                   />
+                  <button
+                    className="insight-btn"
+                    onClick={() => setOpenCodingInsights(true)}
+                  >
+                    More insights ⟶
+                  </button>
                 </div>
+
                 <div className="card-right">
                   <div className="difficulty-column">
                     <div className="difficulty-box summary">
                       <span>Tests taken</span>
-                      <strong>0</strong>
+                      <strong>{codingMock.testsTaken}</strong>
                     </div>
+
                     <div className="difficulty-box summary">
                       <span>Best score</span>
-                      <strong>0%</strong>
+                      <strong>{codingMock.bestScore}%</strong>
                     </div>
+
                     <div className="difficulty-box summary">
-                      <span>Average</span>
-                      <strong>0%</strong>
+                      <span>Preferred</span>
+                      <strong>{codingMock.preferredLanguage}</strong>
                     </div>
                   </div>
                 </div>
@@ -364,25 +390,28 @@ export function Dashboard() {
               <div className="card-body">
                 <div className="card-left">
                   <GaugeChart
-                    value={0}
-                    total={0}
-                    label="Success rate"
+                    value={aptMock.avgScore}
+                    total={100}
+                    label="Avg score"
                     gradientId="aptitudeMockGradient"
                   />
+                  <button
+                    className="insight-btn"
+                    onClick={() => setOpenAptInsights(true)}
+                  >
+                    More insights ⟶
+                  </button>
                 </div>
                 <div className="card-right">
                   <div className="difficulty-column">
                     <div className="difficulty-box summary">
                       <span>Tests taken</span>
-                      <strong>0</strong>
+                      <strong>{aptMock.testsTaken}</strong>
                     </div>
+
                     <div className="difficulty-box summary">
                       <span>Best score</span>
-                      <strong>0%</strong>
-                    </div>
-                    <div className="difficulty-box summary">
-                      <span>Average</span>
-                      <strong>0%</strong>
+                      <strong>{aptMock.bestScore}%</strong>
                     </div>
                   </div>
                 </div>
@@ -402,12 +431,124 @@ export function Dashboard() {
             <div className="streak-grid">
               {last30Days.map((date) => {
                 const solved = dailyActivity[date] || 0;
-                const cls = getStreakClass(solved);
+
+                const cls =
+                  solved <= 0
+                    ? ""
+                    : solved < 5
+                    ? "streak-low"
+                    : solved < 10
+                    ? "streak-mid"
+                    : "streak-high";
+
                 return <div key={date} className={`streak-cell ${cls}`} />;
               })}
             </div>
           </section>
         </section>
+        {openCodingInsights && (
+          <div className="insight-modal">
+            <div className="insight-box">
+              <button
+                className="close-btn"
+                onClick={() => setOpenCodingInsights(false)}
+              >
+                ✖
+              </button>
+
+              <h2>Coding Mock Test Insights</h2>
+
+              <div className="insight-stats">
+                <div className="insight-stats-item">
+                  <p>Tests taken</p>
+                  <strong>{codingMock.testsTaken}</strong>
+                </div>
+
+                <div className="insight-stats-item">
+                  <p>Best score</p>
+                  <strong>{codingMock.bestScore}%</strong>
+                </div>
+
+                <div className="insight-stats-item">
+                  <p>Average score</p>
+                  <strong>{codingMock.avgScore}%</strong>
+                </div>
+
+                <div className="insight-stats-item">
+                  <p>Preferred language</p>
+                  <strong>{codingMock.preferredLanguage}</strong>
+                </div>
+              </div>
+
+              <h3 className="insight-section-title">Recent Tests</h3>
+              <div className="insight-list">
+                <div className="insight-list-header">
+                  <span>Date</span>
+                  <span>Score</span>
+                  <span>Language</span>
+                </div>
+
+                {codingMock.lastTests.slice(-5).map((t, i) => (
+                  <div className="insight-item" key={i}>
+                    <span>{t.date}</span>
+                    <span>{t.score}%</span>
+                    <span>{t.language}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {openAptInsights && (
+          <div className="insight-modal">
+            <div className="insight-box">
+              <button
+                className="close-btn"
+                onClick={() => setOpenAptInsights(false)}
+              >
+                ✖
+              </button>
+
+              <h2>Aptitude Mock Test Insights</h2>
+
+              <div className="insight-stats">
+                <div className="insight-stats-item">
+                  <p>Tests taken</p>
+                  <strong>{aptMock.testsTaken}</strong>
+                </div>
+
+                <div className="insight-stats-item">
+                  <p>Best score</p>
+                  <strong>{aptMock.bestScore}%</strong>
+                </div>
+
+                <div className="insight-stats-item">
+                  <p>Average score</p>
+                  <strong>{aptMock.avgScore}%</strong>
+                </div>
+              </div>
+
+              <h3 className="insight-section-title">Recent Tests</h3>
+
+              <div className="insight-list">
+                <div className="insight-list-header">
+                  <span>Date</span>
+                  <span>Score</span>
+                  <span></span>{" "}
+                </div>
+
+                {aptMock.lastTests.slice(-5).map((t, i) => (
+                  <div className="insight-item" key={i}>
+                    <span>{t.date}</span>
+                    <span>{t.score}%</span>
+                    <span></span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
       </main>
       <Footer />
     </>
