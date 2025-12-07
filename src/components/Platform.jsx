@@ -1,11 +1,13 @@
 import "../styles/platformOverview.css";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import step1 from "../assets/step1.mp4";
 import step2 from "../assets/step2.mp4";
 import step3 from "../assets/step3.mp4";
+import { useNavigate } from "react-router-dom";
 
 export const PlatformOverview = () => {
   const stepRefs = useRef([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const observers = stepRefs.current.map((ref) => {
@@ -86,10 +88,10 @@ export const PlatformOverview = () => {
       </div>
       <div className="cta-section">
         <div className="cta-inner">
-          <h1>
-            What are you waiting for ? Start grinding your skills right away
-          </h1>
-          <button className="cta-btn">Get started</button>
+          <h1>Feeling confident? Take your first test right now</h1>
+          <button className="cta-btn" onClick={() => navigate("/mocktest")}>
+            Get started
+          </button>
         </div>
       </div>
     </section>

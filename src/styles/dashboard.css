@@ -112,41 +112,42 @@
 
 .progress-card {
   background: #ffffff;
-  border-radius: 12px;
-  padding: 16px;
-  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 18px 20px;
+  border: 1px solid #e4e6ef;
   position: relative;
 }
 
 .progress-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px 12px 0 0;
+  display: none;
 }
 
 .card-title {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  margin-bottom: 14px;
   color: #1a1a1a;
+  margin-bottom: 10px;
+  letter-spacing: -0.2px;
 }
 
 .card-body {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 20px;
 }
 
+.progress-card .card-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
 .light-gauge {
+  width: 130px;
+  height: 65px;
   position: relative;
-  width: 150px;
-  height: 75px;
   flex-shrink: 0;
 }
 
@@ -180,86 +181,71 @@
 }
 
 .light-total {
-  font-size: 1.75rem;
+  font-size: 1.55rem;
   font-weight: 700;
   color: #1a1a1a;
-  display: inline;
-  line-height: 1;
 }
 
 .light-sub {
   margin-left: 2px;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   color: #6b7280;
-  display: inline;
 }
 
 .light-label {
-  margin-top: 4px;
-  font-size: 0.6875rem;
-  color: #6b7280;
+  margin-top: 3px;
+  font-size: 0.65rem;
+  color: #6b6b6b;
   font-weight: 500;
 }
 
 .difficulty-column {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   flex: 1;
 }
 
 .difficulty-box {
   width: 100%;
-  background: #f8f9ff;
-  border: 1px solid #e5e7eb;
-  border-left: 3px solid;
-  border-radius: 8px;
-  padding: 10px 14px;
+  background: #f9faff;
+  border: 1px solid #e4e6ef;
+  border-radius: 7px;
+  padding: 8px 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
+  transition: 0.2s ease;
+}
+
+.difficulty-box:hover {
+  background: #f2f4ff;
 }
 
 .difficulty-box span {
-  color: #4a4a4a;
+  color: #444;
   font-weight: 500;
 }
 
-.difficulty-box.easy {
-  border-left-color: #10b981;
+.difficulty-box strong {
+  font-size: 0.85rem;
 }
 
 .difficulty-box.easy strong {
-  color: #10b981;
-  font-weight: 700;
-}
-
-.difficulty-box.medium {
-  border-left-color: #f59e0b;
+  color: #0ea768;
 }
 
 .difficulty-box.medium strong {
-  color: #f59e0b;
-  font-weight: 700;
-}
-
-.difficulty-box.hard {
-  border-left-color: #ef4444;
+  color: #d08800;
 }
 
 .difficulty-box.hard strong {
-  color: #ef4444;
-  font-weight: 700;
-}
-
-.difficulty-box.summary {
-  border-left-color: #667eea;
+  color: #d9343a;
 }
 
 .difficulty-box.summary strong {
   color: #667eea;
-  font-weight: 700;
 }
 
 .streak-section {
@@ -272,14 +258,7 @@
 }
 
 .streak-section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-  border-radius: 12px 12px 0 0;
+  display: none;
 }
 
 .streak-header {
@@ -372,153 +351,22 @@
   color: #444;
 }
 
-@media (max-width: 1250px) {
-  .progress-grid {
-    gap: 20px;
-  }
-
-  .dashboard-main {
-    padding: 32px;
-  }
-}
-
-@media (max-width: 1100px) {
-  .progress-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .card-body {
-    justify-content: flex-start;
-    gap: 40px;
-  }
-
-  .light-gauge {
-    width: 180px;
-    height: 90px;
-  }
-}
-
-@media (max-width: 900px) {
-  .dashboard-page {
-    grid-template-columns: 1fr;
-  }
-
-  .dashboard-sidebar {
-    position: static;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid #e5e7eb;
-    margin-top: 0;
-    padding: 24px;
-  }
-
-  .dashboard-main {
-    padding: 24px;
-  }
-
-  .progress-grid {
-    gap: 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  .dashboard-main {
-    padding: 20px;
-  }
-
-  .streak-grid {
-    grid-template-columns: repeat(10, 1fr);
-    gap: 6px;
-    padding: 16px;
-  }
-
-  .streak-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-  }
-
-  .streak-meta {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .progress-card {
-    padding: 24px;
-  }
-
-  .card-title {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 600px) {
-  .light-gauge {
-    width: 160px;
-    height: 80px;
-  }
-
-  .light-total {
-    font-size: 1.75rem;
-  }
-
-  .light-sub {
-    font-size: 0.75rem;
-  }
-
-  .difficulty-box {
-    padding: 10px 14px;
-  }
-
-  .difficulty-box strong {
-    font-size: 0.875rem;
-  }
-
-  .card-body {
-    flex-direction: column;
-    gap: 28px;
-    align-items: center;
-  }
-
-  .profile-card {
-    padding: 24px 20px;
-  }
-
-  .profile-pic {
-    width: 72px;
-    height: 72px;
-  }
-
-  .profile-name {
-    font-size: 1.125rem;
-  }
-
-  .dashboard-sidebar {
-    padding: 20px;
-  }
-}
-
 .insight-btn {
-  padding: 6px 8px;
-  margin-top: 20px;
-  width: 140px;
-  border: none;
-  border-radius: 25px;
+  margin-top: 8px;
+  padding: 5px 12px;
+  font-size: 0.75rem;
+  border: 1px solid #d5d7f8;
+  border-radius: 20px;
   background: #ffffff;
-  border: 2px solid #667eea;
-  color: #333;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  color: #445;
   transition: 0.25s ease;
+  width: auto;
 }
 
 .insight-btn:hover {
-  background: #667eea;
-  color: white;
+  background: #eef0ff;
+  color: #5960ff;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.25);
 }
 
 .insight-btn:active {
@@ -569,7 +417,7 @@
   font-size: 22px;
   cursor: pointer;
   color: #4b5563;
-  transition: transform 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+  transition: 0.15s ease;
 }
 
 .close-btn:hover {
@@ -601,7 +449,7 @@
 }
 
 .insight-stats-item p {
-  margin: 0 0 4px;
+  margin-bottom: 4px;
   font-size: 0.87rem;
   color: #6b7280;
 }
@@ -647,21 +495,6 @@
   color: #374151;
 }
 
-.insight-list-header span:nth-child(1),
-.insight-item span:nth-child(1) {
-  text-align: left;
-}
-
-.insight-list-header span:nth-child(2),
-.insight-item span:nth-child(2) {
-  text-align: center;
-}
-
-.insight-list-header span:nth-child(3),
-.insight-item span:nth-child(3) {
-  text-align: right;
-}
-
 .insight-item:nth-child(even) {
   background: #f3f4ff;
 }
@@ -670,9 +503,114 @@
   border-bottom: none;
 }
 
-.progress-card .card-left {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+@media (max-width: 1250px) {
+  .dashboard-main {
+    padding: 32px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .progress-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-body {
+    justify-content: flex-start;
+    gap: 40px;
+  }
+
+  .light-gauge {
+    width: 180px;
+    height: 90px;
+  }
+}
+
+@media (max-width: 900px) {
+  .dashboard-page {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-sidebar {
+    position: static;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 24px;
+  }
+
+  .dashboard-main {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-main {
+    padding: 20px;
+  }
+
+  .streak-grid {
+    grid-template-columns: repeat(10, 1fr);
+    gap: 6px;
+    padding: 16px;
+  }
+
+  .streak-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .streak-meta {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .progress-card {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .light-gauge {
+    width: 160px;
+    height: 80px;
+  }
+
+  .light-total {
+    font-size: 1.75rem;
+  }
+
+  .light-sub {
+    font-size: 0.75rem;
+  }
+
+  .difficulty-box {
+    padding: 10px 14px;
+  }
+
+  .difficulty-box strong {
+    font-size: 0.875rem;
+  }
+
+  .card-body {
+    flex-direction: column;
+    gap: 28px;
+    align-items: center;
+  }
+
+  .profile-card {
+    padding: 24px 20px;
+  }
+
+  .profile-pic {
+    width: 72px;
+    height: 72px;
+  }
+
+  .profile-name {
+    font-size: 1.125rem;
+  }
+
+  .dashboard-sidebar {
+    padding: 20px;
+  }
 }

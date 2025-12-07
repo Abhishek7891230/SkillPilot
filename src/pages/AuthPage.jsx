@@ -63,77 +63,92 @@ export default function Auth() {
   };
 
   return (
-    <div className="auth-wrapper">
-      <div className="auth-container">
-        <h2 className="auth-title">
-          {mode === "login" ? "Welcome Back" : "Create Account"}
-        </h2>
+    <div className="auth-page">
+      <div className="auth-left">
+        <div className="auth-left-inner">
+          <h2 className="auth-title">
+            {mode === "login" ? "Welcome Back" : "Create Your Account"}
+          </h2>
 
-        <p className="auth-desc">
-          {mode === "login"
-            ? "Login to continue your progress"
-            : "Sign up to start your journey"}
-        </p>
+          <p className="auth-subtitle">
+            {mode === "login"
+              ? "Login to continue your journey"
+              : "Sign up and start exploring"}
+          </p>
 
-        <div className="auth-form">
-          <div className="input-group">
-            <input
-              type="email"
-              placeholder="Email"
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setErrors({ ...errors, email: "" });
-              }}
-            />
-            {errors.email && <p className="input-error">{errors.email}</p>}
-          </div>
+          <div className="auth-form">
+            <div className="input-group">
+              <input
+                type="email"
+                placeholder="Email"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setErrors({ ...errors, email: "" });
+                }}
+              />
+              {errors.email && <p className="input-error">{errors.email}</p>}
+            </div>
 
-          <div className="input-group">
-            <input
-              type="password"
-              placeholder="Password"
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setErrors({ ...errors, password: "" });
-              }}
-            />
-            {errors.password && (
-              <p className="input-error">{errors.password}</p>
-            )}
-          </div>
-
-          {mode === "signup" && (
             <div className="input-group">
               <input
                 type="password"
-                placeholder="Confirm Password"
+                placeholder="Password"
                 onChange={(e) => {
-                  setConfirm(e.target.value);
-                  setErrors({ ...errors, confirm: "" });
+                  setPassword(e.target.value);
+                  setErrors({ ...errors, password: "" });
                 }}
               />
-              {errors.confirm && (
-                <p className="input-error">{errors.confirm}</p>
+              {errors.password && (
+                <p className="input-error">{errors.password}</p>
               )}
             </div>
-          )}
+
+            {mode === "signup" && (
+              <div className="input-group">
+                <input
+                  type="password"
+                  placeholder="Confirm Password"
+                  onChange={(e) => {
+                    setConfirm(e.target.value);
+                    setErrors({ ...errors, confirm: "" });
+                  }}
+                />
+                {errors.confirm && (
+                  <p className="input-error">{errors.confirm}</p>
+                )}
+              </div>
+            )}
+          </div>
+
+          <button className="auth-submit" onClick={handleSubmit}>
+            {mode === "login" ? "Login" : "Sign Up"}
+          </button>
+
+          <p
+            className="auth-switch"
+            onClick={() => {
+              setMode(mode === "login" ? "signup" : "login");
+              setErrors({ email: "", password: "", confirm: "" });
+            }}
+          >
+            {mode === "login"
+              ? "Don't have an account? Sign up"
+              : "Already have an account? Login"}
+          </p>
         </div>
+      </div>
 
-        <button className="auth-submit" onClick={handleSubmit}>
-          {mode === "login" ? "Login" : "Sign Up"}
-        </button>
+      <div className="auth-right">
+        <div className="auth-bg-overlay"></div>
 
-        <p
-          className="auth-switch"
-          onClick={() => {
-            setMode(mode === "login" ? "signup" : "login");
-            setErrors({ email: "", password: "", confirm: "" });
-          }}
-        >
-          {mode === "login"
-            ? "Don't have an account? Sign up"
-            : "Already have an account? Login"}
-        </p>
+        <div className="auth-right-content">
+          <h1>{mode === "login" ? "Welcome Back!" : "Join Us!"}</h1>
+          <p>
+            {mode === "login"
+              ? "Access your dashboard, continue your journey, and keep making progress."
+              : "Create your account and unlock tools designed to help you grow and achieve more."}
+          </p>
+        </div>
       </div>
     </div>
   );

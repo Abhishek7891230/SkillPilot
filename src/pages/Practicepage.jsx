@@ -7,65 +7,64 @@ export function PracticePage() {
   return (
     <>
       <Navbar />
-      <main className="container">
-        <section className="practice-area coding-area">
-          <div className="area-header">
-            <i className="fas fa-code"></i>
+
+      <main className="practice">
+        <section className="section">
+          <div className="left-title">
             <h2>Practice Coding</h2>
+            <p>
+              Strengthen your coding foundation with structured exercises, timed
+              mock tests, and concise explanations.
+            </p>
           </div>
-          <div className="sub-options">
-            <a href="/coding" className="option-card">
-              <i className="fas fa-terminal"></i>
-              <div className="option-text">
-                <h3>Solve Problems →</h3>
-                <p>Solve problems focused on DSA and sharpen your skills.</p>
-              </div>
+
+          <div className="right-content">
+            <a href="/coding" className="item">
+              <h3>Solve Problems →</h3>
+              <p>
+                Improve your DSA fundamentals through progressive challenges.
+              </p>
             </a>
-            <a href="/mocktest/config?mode=coding" className="option-card">
-              <i className="fas fa-clipboard-list"></i>
-              <div className="option-text">
-                <h3>Take Mock Test→</h3>
-                <p>Simulate interviews and track progress.</p>
-              </div>
+
+            <a href="/mocktest/config?mode=coding" className="item">
+              <h3>Take Mock Test →</h3>
+              <p>Test your skills under real-time interview conditions.</p>
             </a>
-            <Link to="/notes" className="option-card">
-              <i className="fas fa-book-open"></i>
-              <div className="option-text">
-                <h3>Learn→</h3>
-                <p>Forgot a concept? Explore notes</p>
-              </div>
+
+            <Link to="/notes" className="item">
+              <h3>Learn →</h3>
+              <p>Quick, clear explanations for brushing up concepts.</p>
             </Link>
           </div>
         </section>
 
-        <hr />
-
-        <section className="practice-area aptitude-area">
-          <div className="area-header">
-            <i className="fas fa-brain"></i>
+        <section className="section">
+          <div className="left-title">
             <h2>Practice Aptitude</h2>
+            <p>
+              Develop reasoning, accuracy, and confidence with essential
+              aptitude exercises and test formats.
+            </p>
           </div>
-          <div className="sub-options">
-            <a href="/aptitude" className="option-card">
-              <i className="fas fa-calculator"></i>
-              <div className="option-text">
-                <h3>Solve Problems→</h3>
-                <p>Practice quantitative and logical reasoning.</p>
-              </div>
+
+          <div className="right-content">
+            <a href="/aptitude" className="item">
+              <h3>Solve Problems →</h3>
+              <p>
+                Build quantitative and logical reasoning through curated sets.
+              </p>
             </a>
-            <a href="/mocktest/config?mode=aptitude" className="option-card">
-              <i className="fas fa-clipboard-check"></i>
-              <div className="option-text">
-                <h3>Take Mock Test→</h3>
-                <p>Test your speed and accuracy under pressure.</p>
-              </div>
+
+            <a href="/mocktest/config?mode=aptitude" className="item">
+              <h3>Take Mock Test →</h3>
+              <p>Assess your accuracy and speed in competitive scenarios.</p>
             </a>
-            <Link to="/notes" className="option-card">
-              <i className="fas fa-graduation-cap"></i>
-              <div className="option-text">
-                <h3>Learn→</h3>
-                <p>Master concepts with detailed notes.</p>
-              </div>
+
+            <Link to="/notes" className="item">
+              <h3>Learn →</h3>
+              <p>
+                Master aptitude faster with structured and simplified notes.
+              </p>
             </Link>
           </div>
         </section>
