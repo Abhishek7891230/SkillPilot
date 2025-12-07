@@ -1,0 +1,10 @@
+{
+  "id": "ugly-number",
+  "title": "Ugly Number II",
+  "testCases": [
+    { "args": [10], "expected": "12" },
+    { "args": [1], "expected": "1" },
+    { "args": [11], "expected": "15" }
+  ]
+}
+

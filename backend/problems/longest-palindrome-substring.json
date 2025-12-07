@@ -1,0 +1,10 @@
+{
+  "id": "longest-palindrome-substring",
+  "title": "Longest Palindromic Substring",
+  "testCases": [
+    { "args": ["babad"], "expected": "3" },
+    { "args": ["cbbd"], "expected": "2" },
+    { "args": ["a"], "expected": "1" }
+  ]
+}
+

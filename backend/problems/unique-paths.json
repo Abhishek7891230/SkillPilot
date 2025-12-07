@@ -1,0 +1,10 @@
+{
+  "id": "unique-paths",
+  "title": "Unique Paths",
+  "testCases": [
+    { "args": [3, 7], "expected": "28" },
+    { "args": [3, 2], "expected": "3" },
+    { "args": [1, 1], "expected": "1" }
+  ]
+}
+

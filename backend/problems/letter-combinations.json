@@ -1,0 +1,10 @@
+{
+  "id": "letter-combinations",
+  "title": "Letter Combinations of Phone Number",
+  "testCases": [
+    { "args": ["23"], "expected": "9" },
+    { "args": ["2"], "expected": "3" },
+    { "args": [""], "expected": "0" }
+  ]
+}
+

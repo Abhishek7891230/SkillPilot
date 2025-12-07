@@ -1,0 +1,10 @@
+{
+  "id": "regular-expression",
+  "title": "Regular Expression Matching",
+  "testCases": [
+    { "args": ["aa", "a*"], "expected": "YES" },
+    { "args": ["aa", "a"], "expected": "NO" },
+    { "args": ["ab", ".*"], "expected": "YES" }
+  ]
+}
+

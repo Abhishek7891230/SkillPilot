@@ -1,0 +1,10 @@
+{
+  "id": "interleaving-string",
+  "title": "Interleaving String",
+  "testCases": [
+    { "args": ["aabcc", "dbbca", "aadbbcbcac"], "expected": "YES" },
+    { "args": ["aabcc", "dbbca", "aadbbbaccc"], "expected": "NO" },
+    { "args": ["", "", ""], "expected": "YES" }
+  ]
+}
+

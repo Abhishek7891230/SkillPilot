@@ -1,0 +1,10 @@
+{
+  "id": "longest-substring",
+  "title": "Longest Substring Without Repeating",
+  "testCases": [
+    { "args": ["abcabcbb"], "expected": "3" },
+    { "args": ["bbbbb"], "expected": "1" },
+    { "args": ["pwwkew"], "expected": "3" }
+  ]
+}
+

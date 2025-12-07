@@ -1,0 +1,10 @@
+{
+  "id": "valid-anagram",
+  "title": "Valid Anagram",
+  "testCases": [
+    { "args": ["anagram", "nagaram"], "expected": "YES" },
+    { "args": ["rat", "car"], "expected": "NO" },
+    { "args": ["listen", "silent"], "expected": "YES" }
+  ]
+}
+

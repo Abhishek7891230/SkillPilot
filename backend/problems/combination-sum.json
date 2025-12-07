@@ -1,0 +1,10 @@
+{
+  "id": "combination-sum",
+  "title": "Combination Sum",
+  "testCases": [
+    { "args": [[2, 3, 6], 7], "expected": "2" },
+    { "args": [[2, 3, 5], 8], "expected": "3" },
+    { "args": [[2], 1], "expected": "0" }
+  ]
+}
+

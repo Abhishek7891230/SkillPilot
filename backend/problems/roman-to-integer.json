@@ -1,0 +1,10 @@
+{
+  "id": "roman-to-integer",
+  "title": "Roman to Integer",
+  "testCases": [
+    { "args": ["III"], "expected": "3" },
+    { "args": ["MCMXCIV"], "expected": "1994" },
+    { "args": ["LVIII"], "expected": "58" }
+  ]
+}
+

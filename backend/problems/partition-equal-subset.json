@@ -1,0 +1,10 @@
+{
+  "id": "partition-equal-subset",
+  "title": "Partition Equal Subset Sum",
+  "testCases": [
+    { "args": [[1, 5, 11, 5]], "expected": "YES" },
+    { "args": [[1, 2, 3, 5]], "expected": "NO" },
+    { "args": [[1, 1]], "expected": "YES" }
+  ]
+}
+

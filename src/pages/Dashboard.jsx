@@ -37,7 +37,7 @@ function GaugeChart({ value, total, label, gradientId }) {
       </svg>
       <div className="light-center">
         <span className="light-total">{value}</span>
-        <span className="light-sub">%</span>
+        {total > 0 && <span className="light-sub">/{total}</span>}
         <div className="light-label">{label}</div>
       </div>
     </div>

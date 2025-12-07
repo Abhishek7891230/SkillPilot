@@ -1,0 +1,10 @@
+{
+  "id": "binary-tree-max-path",
+  "title": "Binary Tree Maximum Path Sum",
+  "testCases": [
+    { "args": [[1, 2, 3]], "expected": "6" },
+    { "args": [[-10, 9, 20, null, null, 15, 7]], "expected": "42" },
+    { "args": [[1]], "expected": "1" }
+  ]
+}
+

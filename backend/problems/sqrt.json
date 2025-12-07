@@ -1,0 +1,10 @@
+{
+  "id": "sqrt",
+  "title": "Square Root",
+  "testCases": [
+    { "args": [8], "expected": "2" },
+    { "args": [16], "expected": "4" },
+    { "args": [1], "expected": "1" }
+  ]
+}
+

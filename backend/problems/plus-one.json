@@ -1,0 +1,10 @@
+{
+  "id": "plus-one",
+  "title": "Plus One",
+  "testCases": [
+    { "args": [[1, 2, 3]], "expected": "1 2 4" },
+    { "args": [[9, 9, 9]], "expected": "1 0 0 0" },
+    { "args": [[0]], "expected": "1" }
+  ]
+}
+

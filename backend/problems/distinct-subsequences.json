@@ -1,0 +1,10 @@
+{
+  "id": "distinct-subsequences",
+  "title": "Distinct Subsequences",
+  "testCases": [
+    { "args": ["rabbbit", "rabbit"], "expected": "3" },
+    { "args": ["babgbag", "bag"], "expected": "5" },
+    { "args": ["", "a"], "expected": "0" }
+  ]
+}
+

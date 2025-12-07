@@ -1,0 +1,10 @@
+{
+  "id": "longest-valid-parentheses",
+  "title": "Longest Valid Parentheses",
+  "testCases": [
+    { "args": ["(()"], "expected": "2" },
+    { "args": [")()())"], "expected": "4" },
+    { "args": [""], "expected": "0" }
+  ]
+}
+

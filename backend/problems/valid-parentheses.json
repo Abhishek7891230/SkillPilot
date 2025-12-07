@@ -1,0 +1,10 @@
+{
+  "id": "valid-parentheses",
+  "title": "Valid Parentheses",
+  "testCases": [
+    { "args": ["()[]{}"], "expected": "YES" },
+    { "args": ["([)]"], "expected": "NO" },
+    { "args": ["{[]}"], "expected": "YES" }
+  ]
+}
+

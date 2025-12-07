@@ -1,0 +1,10 @@
+{
+  "id": "top-k-frequent",
+  "title": "Top K Frequent Elements",
+  "testCases": [
+    { "args": [[1, 1, 1, 2, 2, 3], 2], "expected": "1 2" },
+    { "args": [[1], 1], "expected": "1" },
+    { "args": [[4, 1, -1, 2, -1, 2, 3], 2], "expected": "-1 2" }
+  ]
+}
+

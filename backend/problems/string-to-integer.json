@@ -1,0 +1,10 @@
+{
+  "id": "string-to-integer",
+  "title": "String to Integer (atoi)",
+  "testCases": [
+    { "args": ["42"], "expected": "42" },
+    { "args": ["   -42"], "expected": "-42" },
+    { "args": ["4193 with words"], "expected": "4193" }
+  ]
+}
+

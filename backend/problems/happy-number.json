@@ -1,0 +1,10 @@
+{
+  "id": "happy-number",
+  "title": "Happy Number",
+  "testCases": [
+    { "args": [19], "expected": "YES" },
+    { "args": [2], "expected": "NO" },
+    { "args": [1], "expected": "YES" }
+  ]
+}
+

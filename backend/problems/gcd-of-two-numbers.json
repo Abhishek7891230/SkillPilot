@@ -1,0 +1,9 @@
+{
+  "id": "gcd-of-two-numbers",
+  "title": "GCD of Two Numbers",
+  "testCases": [
+    { "args": [12, 8], "expected": "4" },
+    { "args": [17, 19], "expected": "1" },
+    { "args": [48, 18], "expected": "6" }
+  ]
+}

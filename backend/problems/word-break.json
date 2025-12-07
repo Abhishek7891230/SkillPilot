@@ -1,0 +1,10 @@
+{
+  "id": "word-break",
+  "title": "Word Break",
+  "testCases": [
+    { "args": ["leetcode", ["leet", "code"]], "expected": "YES" },
+    { "args": ["applepenapple", ["apple", "pen"]], "expected": "YES" },
+    { "args": ["catsandog", ["cats", "dog", "sand", "and", "cat"]], "expected": "NO" }
+  ]
+}
+

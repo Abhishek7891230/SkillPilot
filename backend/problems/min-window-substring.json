@@ -1,0 +1,10 @@
+{
+  "id": "min-window-substring",
+  "title": "Minimum Window Substring",
+  "testCases": [
+    { "args": ["ADOBECODEBANC", "ABC"], "expected": "4" },
+    { "args": ["a", "a"], "expected": "1" },
+    { "args": ["a", "aa"], "expected": "0" }
+  ]
+}
+

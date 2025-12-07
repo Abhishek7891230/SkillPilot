@@ -1,0 +1,10 @@
+{
+  "id": "group-anagrams",
+  "title": "Group Anagrams",
+  "testCases": [
+    { "args": [["eat", "tea", "tan", "ate", "nat", "bat"]], "expected": "3" },
+    { "args": [[""]], "expected": "1" },
+    { "args": [["a"]], "expected": "1" }
+  ]
+}
+

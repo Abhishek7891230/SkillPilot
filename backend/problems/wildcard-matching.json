@@ -1,0 +1,10 @@
+{
+  "id": "wildcard-matching",
+  "title": "Wildcard Matching",
+  "testCases": [
+    { "args": ["aa", "*"], "expected": "YES" },
+    { "args": ["cb", "?a"], "expected": "NO" },
+    { "args": ["adceb", "*a*b"], "expected": "YES" }
+  ]
+}
+

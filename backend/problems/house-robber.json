@@ -1,0 +1,10 @@
+{
+  "id": "house-robber",
+  "title": "House Robber",
+  "testCases": [
+    { "args": [[1, 2, 3, 1]], "expected": "4" },
+    { "args": [[2, 7, 9, 3, 1]], "expected": "12" },
+    { "args": [[2, 1, 1, 2]], "expected": "4" }
+  ]
+}
+

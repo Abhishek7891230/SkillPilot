@@ -1,0 +1,10 @@
+{
+  "id": "pow-x-n",
+  "title": "Pow(x, n)",
+  "testCases": [
+    { "args": [2.0, 10], "expected": "1024.00" },
+    { "args": [2.1, 3], "expected": "9.26" },
+    { "args": [2.0, -2], "expected": "0.25" }
+  ]
+}
+

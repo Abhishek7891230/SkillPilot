@@ -1,0 +1,10 @@
+{
+  "id": "frog-jump",
+  "title": "Frog Jump",
+  "testCases": [
+    { "args": [[0, 1, 3, 5, 6]], "expected": "YES" },
+    { "args": [[0, 1, 2, 3, 4, 8, 9, 11]], "expected": "NO" },
+    { "args": [[0, 1, 3]], "expected": "YES" }
+  ]
+}
+

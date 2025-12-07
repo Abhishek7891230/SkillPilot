@@ -1,0 +1,10 @@
+{
+  "id": "decode-ways",
+  "title": "Decode Ways",
+  "testCases": [
+    { "args": ["226"], "expected": "3" },
+    { "args": ["12"], "expected": "2" },
+    { "args": ["06"], "expected": "0" }
+  ]
+}
+

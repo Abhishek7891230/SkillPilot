@@ -1,0 +1,10 @@
+{
+  "id": "subarray-sum",
+  "title": "Subarray Sum Equals K",
+  "testCases": [
+    { "args": [[1, 1, 1], 2], "expected": "2" },
+    { "args": [[1, 2, 3], 3], "expected": "2" },
+    { "args": [[1], 1], "expected": "1" }
+  ]
+}
+

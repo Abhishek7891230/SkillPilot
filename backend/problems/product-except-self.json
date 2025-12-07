@@ -1,0 +1,10 @@
+{
+  "id": "product-except-self",
+  "title": "Product of Array Except Self",
+  "testCases": [
+    { "args": [[1, 2, 3, 4]], "expected": "24 12 8 6" },
+    { "args": [[1, 1]], "expected": "1 1" },
+    { "args": [[0, 1]], "expected": "1 0" }
+  ]
+}
+

@@ -1,0 +1,10 @@
+{
+  "id": "majority-element",
+  "title": "Majority Element",
+  "testCases": [
+    { "args": [[3, 2, 3, 3, 3, 2, 3]], "expected": "3" },
+    { "args": [[2, 2, 1, 1, 1, 2, 2]], "expected": "2" },
+    { "args": [[1]], "expected": "1" }
+  ]
+}
+

@@ -1,0 +1,10 @@
+{
+  "id": "zigzag-conversion",
+  "title": "ZigZag Conversion",
+  "testCases": [
+    { "args": ["PAYPALISHIRING", 3], "expected": "PAHNAPLSIIGYIR" },
+    { "args": ["PAYPALISHIRING", 4], "expected": "PINALSIGYAHRPI" },
+    { "args": ["A", 1], "expected": "A" }
+  ]
+}
+

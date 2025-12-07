@@ -1,0 +1,10 @@
+{
+  "id": "hamming-distance",
+  "title": "Hamming Distance",
+  "testCases": [
+    { "args": [1, 4], "expected": "2" },
+    { "args": [3, 1], "expected": "1" },
+    { "args": [0, 0], "expected": "0" }
+  ]
+}
+

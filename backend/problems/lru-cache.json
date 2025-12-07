@@ -1,0 +1,10 @@
+{
+  "id": "lru-cache",
+  "title": "LRU Cache Operations",
+  "testCases": [
+    { "args": [2, [[1, 1], [2, 2], [1], [2]]], "expected": "2" },
+    { "args": [2, [[1, 1], [2, 2], [1], [3, 3], [2]]], "expected": "1" },
+    { "args": [1, [[1, 1], [1]]], "expected": "1" }
+  ]
+}
+

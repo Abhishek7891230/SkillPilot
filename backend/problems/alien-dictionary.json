@@ -1,0 +1,10 @@
+{
+  "id": "alien-dictionary",
+  "title": "Alien Dictionary",
+  "testCases": [
+    { "args": [["hello", "leetcode"], "hlabcdefgijkmnopqrstuvwxyz"], "expected": "YES" },
+    { "args": [["word", "world", "row"], "worldabcefghijkmnpqstuvxyz"], "expected": "NO" },
+    { "args": [["apple", "app"], "abcdefghijklmnopqrstuvwxyz"], "expected": "NO" }
+  ]
+}
+

@@ -1,0 +1,10 @@
+{
+  "id": "palindrome-pairs",
+  "title": "Palindrome Pairs",
+  "testCases": [
+    { "args": [["abcd", "dcba", "lls", "s"]], "expected": "4" },
+    { "args": [["bat", "tab", "cat"]], "expected": "2" },
+    { "args": [["a", ""]], "expected": "2" }
+  ]
+}
+

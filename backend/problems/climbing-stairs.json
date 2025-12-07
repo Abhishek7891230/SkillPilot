@@ -1,0 +1,10 @@
+{
+  "id": "climbing-stairs",
+  "title": "Climbing Stairs",
+  "testCases": [
+    { "args": [3], "expected": "3" },
+    { "args": [2], "expected": "2" },
+    { "args": [5], "expected": "8" }
+  ]
+}
+

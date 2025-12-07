@@ -1,0 +1,10 @@
+{
+  "id": "min-of-array",
+  "title": "Minimum in an Array",
+  "testCases": [
+    { "args": [[1, 2, 3, 4, 5]], "expected": "1" },
+    { "args": [[-5, -1, -7, -3]], "expected": "-7" },
+    { "args": [[100]], "expected": "100" }
+  ]
+}
+

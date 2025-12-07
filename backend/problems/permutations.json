@@ -1,0 +1,10 @@
+{
+  "id": "permutations",
+  "title": "Permutations",
+  "testCases": [
+    { "args": [[1, 2, 3]], "expected": "6" },
+    { "args": [[0, 1]], "expected": "2" },
+    { "args": [[1]], "expected": "1" }
+  ]
+}
+

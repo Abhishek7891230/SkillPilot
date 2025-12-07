@@ -1,0 +1,10 @@
+{
+  "id": "missing-number",
+  "title": "Missing Number",
+  "testCases": [
+    { "args": [[3, 0, 1]], "expected": "2" },
+    { "args": [[0, 1]], "expected": "2" },
+    { "args": [[9, 6, 4, 2, 3, 5, 7, 0, 1]], "expected": "8" }
+  ]
+}
+

@@ -1,0 +1,10 @@
+{
+  "id": "edit-distance",
+  "title": "Edit Distance",
+  "testCases": [
+    { "args": ["horse", "ros"], "expected": "3" },
+    { "args": ["intention", "execution"], "expected": "5" },
+    { "args": ["", "a"], "expected": "1" }
+  ]
+}
+

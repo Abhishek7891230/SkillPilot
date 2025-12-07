@@ -1,0 +1,10 @@
+{
+  "id": "count-ranges",
+  "title": "Count of Range Sum",
+  "testCases": [
+    { "args": [[-2, 5, -1], -2, 2], "expected": "3" },
+    { "args": [[0], 0, 0], "expected": "1" },
+    { "args": [[1, 2, 3], 0, 6], "expected": "6" }
+  ]
+}
+

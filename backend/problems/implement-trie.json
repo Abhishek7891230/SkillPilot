@@ -1,0 +1,10 @@
+{
+  "id": "implement-trie",
+  "title": "Implement Trie Count",
+  "testCases": [
+    { "args": [["apple", "app", "application"]], "expected": "3" },
+    { "args": [["test", "testing"]], "expected": "2" },
+    { "args": [["a"]], "expected": "1" }
+  ]
+}
+

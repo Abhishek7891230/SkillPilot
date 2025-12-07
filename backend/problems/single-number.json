@@ -1,0 +1,10 @@
+{
+  "id": "single-number",
+  "title": "Single Number",
+  "testCases": [
+    { "args": [[4, 1, 2, 1, 2]], "expected": "4" },
+    { "args": [[2, 2, 1]], "expected": "1" },
+    { "args": [[1]], "expected": "1" }
+  ]
+}
+

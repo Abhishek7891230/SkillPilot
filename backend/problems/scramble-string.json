@@ -1,0 +1,10 @@
+{
+  "id": "scramble-string",
+  "title": "Scramble String",
+  "testCases": [
+    { "args": ["great", "rgeat"], "expected": "YES" },
+    { "args": ["abcde", "caebd"], "expected": "NO" },
+    { "args": ["a", "a"], "expected": "YES" }
+  ]
+}
+

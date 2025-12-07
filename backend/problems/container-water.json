@@ -1,0 +1,10 @@
+{
+  "id": "container-water",
+  "title": "Container With Most Water",
+  "testCases": [
+    { "args": [[1, 8, 6, 2, 5, 4, 8, 3, 7]], "expected": "49" },
+    { "args": [[1, 1]], "expected": "1" },
+    { "args": [[4, 3, 2, 1, 4]], "expected": "16" }
+  ]
+}
+
